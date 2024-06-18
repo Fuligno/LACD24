@@ -38,7 +38,7 @@ void calibrazioneQDC() {
 
     // Loop through each file and process it
     for (size_t fileIndex = 0; fileIndex < fileNames.size(); ++fileIndex) {
-        ifstream dataFile(fileNames[fileIndex]);
+        ifstream dataFile("../Dati/QDC/"+fileNames[fileIndex]);
         if (!dataFile.is_open()) {
             cerr << "Unable to open data file: " << fileNames[fileIndex] << endl;  // Error if data file can't be opened
             continue;

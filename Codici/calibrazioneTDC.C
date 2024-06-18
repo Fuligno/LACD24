@@ -38,7 +38,7 @@ void calibrazioneTDC() {
 
     // Loop through each file and process it
     for (const string& fileName : fileNames) {
-        ifstream dataFile(fileName);       // Open the data file
+        ifstream dataFile("../Dati/TDC/"+fileName);       // Open the data file
         if (!dataFile.is_open()) {
             cerr << "Unable to open data file: " << fileName << endl;  // Error message if data file can't be opened
             continue;
