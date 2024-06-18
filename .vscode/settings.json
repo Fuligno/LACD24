@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "calibrazioneQDC.C": "cpp",
+        "PlotQDC_high.C": "cpp",
+        "calibrazioneTDC.C": "cpp"
+    }
+}
