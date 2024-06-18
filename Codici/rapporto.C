@@ -8,7 +8,7 @@ using namespace std;
 
 void rapporto() {
     // Nome del file per lo stream di dati
-    string file_name = "AqqTrigger1234data0506ora1744.txt";
+    string file_name = "../Dati/AqqTrigger1234data0506ora1744.txt";
     // Inizializza e apri il file di input
     ifstream file_in(file_name);
  
