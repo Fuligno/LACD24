@@ -5,16 +5,30 @@
 #include <string>
 #include "TFile.h"
 #include "TTree.h"
+#include "rapporto.C"
 
 using namespace std;
 
+double carica(double &ql, double &qh, double &conv){
+    // questa macro prende il valore ad alta risoluzione se valido, altrimenti
+    // converte quello a bassa in alta usando l'opportuno fattore di conversione
+    double q;
+    if(qh<3840){
+        q = qh;
+    } else {
+        q = ql * conv;
+    }
+    return q;
+}
+
 void lettura() {
+
+//------------------------------Dichiarazione variabili e apertura file------------------------------------
     // Variabili nel file da leggere
     double q1_l, q1_h, q2_l, q2_h, q3_l, q3_h, q4_l, q4_h, t1, t2, t3, t4, clock;
     double q1, q2, q3, q4;
 
-    //valori da prendere dalla macro rapporto.C
-    double conv1=8, conv2=8, conv3=8, conv4=8;
+
 
     TFile* file_out = new TFile("TreeOut.root", "RECREATE");
 
@@ -31,24 +45,24 @@ void lettura() {
     treeS1234->Branch("clock", &clock, "clock/D");
 
     // Dati con trigger sui canali 1 e 4, dei soli canali triggerati
-    TTree *treeS14_full = new TTree("s1-4_full", "QDC & TDC of Trigger with S1+S4");
-	treeS14_full->Branch("q1", &q1, "q1/D");
-    treeS14_full->Branch("q4", &q4, "q4/D");
-    treeS14_full->Branch("t1", &t1, "t1/D");
-    treeS14_full->Branch("t4", &t4, "t4/D");
-    treeS14_full->Branch("clock", &clock, "clock/D");
+    TTree *treeS24_full = new TTree("s2-4_full", "QDC & TDC of Trigger with S2+S4");
+	treeS24_full->Branch("q2", &q2, "q2/D");
+    treeS24_full->Branch("q4", &q4, "q4/D");
+    treeS24_full->Branch("t2", &t2, "t2/D");
+    treeS24_full->Branch("t4", &t4, "t4/D");
+    treeS24_full->Branch("clock", &clock, "clock/D");
 
     // Dati con trigger sui canali 1 e 4, con segnale presente anche sui canali non triggerati
-    TTree *treeS14 = new TTree("s1-4", "QDC & TDC of Trigger with S1+S4");
-	treeS14->Branch("q1", &q1, "q1/D");
-    treeS14->Branch("q2", &q2, "q2/D");
-    treeS14->Branch("q3", &q3, "q3/D");
-    treeS14->Branch("q4", &q4, "q4/D");
-    treeS14->Branch("t1", &t1, "t1/D");
-    treeS14->Branch("t2", &t2, "t2/D");
-    treeS14->Branch("t3", &t3, "t3/D");
-    treeS14->Branch("t4", &t4, "t4/D");
-    treeS14->Branch("clock", &clock, "clock/D");
+    TTree *treeS24 = new TTree("s2-4", "QDC & TDC of Trigger with S2+S4");
+	treeS24->Branch("q1", &q1, "q1/D");
+    treeS24->Branch("q2", &q2, "q2/D");
+    treeS24->Branch("q3", &q3, "q3/D");
+    treeS24->Branch("q4", &q4, "q4/D");
+    treeS24->Branch("t1", &t1, "t1/D");
+    treeS24->Branch("t2", &t2, "t2/D");
+    treeS24->Branch("t3", &t3, "t3/D");
+    treeS24->Branch("t4", &t4, "t4/D");
+    treeS24->Branch("clock", &clock, "clock/D");
 
     // Dati con trigger sul canale 3, del solo canale triggerato
     TTree *treeS3_full = new TTree("s3_full", "QDC & TDC of Trigger with S3");
@@ -73,7 +87,7 @@ void lettura() {
     // Inizializza e apri il file di input
     ifstream file_in3(file3);
 
-    // Nome del file per lo stream di dati Trigger S1+S4
+    // Nome del file per lo stream di dati Trigger S2+S4
     string file2 = "../Dati/AqqTrigger14data0406ora1728.txt";
     // Inizializza e apri il file di input
     ifstream file_in2(file2);
@@ -89,7 +103,7 @@ void lettura() {
         return;
     }
     if (!file_in2.is_open()) {
-        cout << "Cannot open data file S1-4!" << endl;
+        cout << "Cannot open data file S2-4!" << endl;
         return;
     }
     if (!file_in1.is_open()) {
@@ -97,134 +111,82 @@ void lettura() {
         return;
     }
     
-    // Loop fino alla fine del file, riga per riga
-    while (file_in1 >> q1_l >> q1_h >> q2_l >> q2_h >> q3_l >> q3_h >> q4_l >> q4_h >> t1 >> t2 >> t3 >> t4 >> clock) {
+//------------------------------Conversione bassa -> alta risoluzione della QDC------------------------------------
+    //valori da prendere dalla macro rapporto.C
+    double conv1, conv2, conv3, conv4;
+    rapporto(conv2, conv1, conv3, conv4);
 
+//------------------------------Lettura file S1+2+3+4------------------------------------
+    // Loop fino alla fine del file, riga per riga
+    while (file_in1 >> q2_l >> q2_h >> q1_l >> q1_h >> q3_l >> q3_h >> q4_l >> q4_h >> t2 >> t1 >> t3 >> t4 >> clock) {
         // Ignora le righe con valori nulli
         if (q1_h == 0 || q2_h == 0  || q3_h == 0 || q4_h == 0 || t1 == 0 || t2 == 0 || t3 == 0 || t4 == 0) {
             continue;
         }
+        q1 = carica(q1_l, q1_h, conv1);
+        q2 = carica(q2_l, q2_h, conv2);
+        q3 = carica(q3_l, q3_h, conv3);
+        q4 = carica(q4_l, q4_h, conv4);
 
-        // questi if andrebbero messi in una macro carina
-        if(q1_h > 3839){
-            q1 = q1_l * conv1;
-        } else {
-            q1 = q1_h;
-        }
-        if(q2_h > 3839){
-            q2 = q2_l * conv2;
-        } else {
-            q2 = q2_h;
-        }
-        if(q3_h > 3839){
-            q3 = q3_l * conv3;
-        } else {
-            q3 = q3_h;
-        }
-        if(q4_h > 3839){
-            q4 = q4_l * conv4;
-        } else {
-            q4 = q4_h;
-        }
-        // fare macro per convertire i valori da file in valori in carica e tempo prima di scriverli
         treeS1234->Fill();
     }
     // Chiudi il file di input
     file_in1.close();
-    
+
+//------------------------------Lettura file S2+4------------------------------------    
     // Loop fino alla fine del file, riga per riga
-    while (file_in2 >> q1_l >> q1_h >> q2_l >> q2_h >> q3_l >> q3_h >> q4_l >> q4_h >> t1 >> t2 >> t3 >> t4 >> clock) {
-
+    while (file_in2 >> q2_l >> q2_h >> q1_l >> q1_h >> q3_l >> q3_h >> q4_l >> q4_h >> t2 >> t1 >> t3 >> t4 >> clock) {
         // Ignora le righe con valori nulli
-        if (q1_h == 0 || q4_h == 0 || t1 == 0 || t4 == 0) {
+        if (q2_h == 0 || q4_h == 0 || t2 == 0 || t4 == 0) {
             continue;
         }
+        q2 = carica(q2_l, q2_h, conv2);
+        q4 = carica(q4_l, q4_h, conv4);
 
-        // questi if andrebbero messi in una macro carina
-        if(q1_h > 3839){
-            q1 = q1_l * conv1;
-        } else {
-            q1 = q1_h;
-        }
-        if(q4_h > 3839){
-            q4 = q4_l * conv4;
-        } else {
-            q4 = q4_h;
-        }
-        // fare macro per convertire i valori da file in valori in carica e tempo prima di scriverli
-        treeS14_full->Fill();
-        // guarda se lo scintillatore 2 ha visto un evento
-        if (q2_h == 0 || q3_h == 0 || t2 == 0 || t3 == 0) {
+        treeS24_full->Fill();
+
+        // guarda se gli scintillatori 1 e 3 hanno visto un evento
+        if (q1_h == 0 || q3_h == 0 || t1 == 0 || t3 == 0) {
             continue;
         }
-        // questi if andrebbero messi in una macro carina
-        if(q2_h > 3839){
-            q2 = q2_l * conv2;
-        } else {
-            q2 = q2_h;
-        }
-        if(q3_h > 3839){
-            q3 = q3_l * conv3;
-        } else {
-            q3 = q3_h;
-        }
-        // fare macro per convertire i valori da file in valori in carica e tempo prima di scriverli
-        treeS14->Fill();
+        q1 = carica(q1_l, q1_h, conv1);
+        q3 = carica(q3_l, q3_h, conv3);
+ 
+        treeS24->Fill();
     }
     // Chiudi il file di input
     file_in2.close();
-    
+
+//------------------------------Lettura file S3------------------------------------   
     // Loop fino alla fine del file, riga per riga
-    while (file_in3 >> q1_l >> q1_h >> q2_l >> q2_h >> q3_l >> q3_h >> q4_l >> q4_h >> t1 >> t2 >> t3 >> t4 >> clock) {
+    while (file_in3 >> q2_l >> q2_h >> q1_l >> q1_h >> q3_l >> q3_h >> q4_l >> q4_h >> t2 >> t1 >> t3 >> t4 >> clock) {
 
         // Ignora le righe con valori nulli
         if (q3_h == 0 || t3 == 0) {
             continue;
         }
+        q3 = carica(q3_l, q3_h, conv3);
 
-        // questi if andrebbero messi in una macro carina
-        if(q3_h > 3839){
-            q3 = q3_l * conv3;
-        } else {
-            q3 = q3_h;
-        }
-        
-        // fare macro per convertire i valori da file in valori in carica e tempo prima di scriverli
         treeS3_full->Fill();
-        // guarda se lo scintillatore 2 ha visto un evento
+        // guarda se gli scintillatori 1, 3 e 4 hanno visto un evento
         if (q1_h == 0 || q2_h == 0 || q4_h == 0 || t1 == 0 || t2 == 0 || t4 == 0) {
             continue;
         }
-        // questi if andrebbero messi in una macro carina
-        if(q1_h > 3839){
-            q1 = q1_l * conv1;
-        } else {
-            q1 = q1_h;
-        }
-        if(q2_h > 3839){
-            q2 = q2_l * conv2;
-        } else {
-            q2 = q2_h;
-        }
-        if(q4_h > 3839){
-            q4 = q4_l * conv4;
-        } else {
-            q4 = q4_h;
-        }
-        // fare macro per convertire i valori da file in valori in carica e tempo prima di scriverli
+        q1 = carica(q1_l, q1_h, conv1);
+        q2 = carica(q2_l, q2_h, conv2);
+        q4 = carica(q4_l, q4_h, conv4);
+
         treeS3->Fill();
     }
     // Chiudi il file di input
     file_in3.close();
 
-    
-    // Stampa i risultati
+//------------------------------Salvataggio su file dei risultati------------------------------------       
     treeS1234->Write();
-    treeS14_full->Write();
-    treeS14->Write();
+    treeS24_full->Write();
+    treeS24->Write();
     treeS3_full->Write();
     treeS3->Write();
     delete file_out;
     
-    return;
 }

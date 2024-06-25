@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void rapporto() {
+void rapporto(double &r1, double &r2, double &r3, double &r4) {
     // Nome del file per lo stream di dati
     string file_name = "../Dati/AqqTrigger1234data0506ora1744.txt";
     // Inizializza e apri il file di input
@@ -49,18 +49,17 @@ void rapporto() {
     file_in.close();
     
     // Calcola i rapporti medi
-    double q1 = q1_sum / icand ;
-    double q2 = q2_sum / icand ;
-    double q3 = q3_sum / icand ;
-    double q4 = q4_sum / icand ;
+    r1 = q1_sum / icand ;
+    r2 = q2_sum / icand ;
+    r3 = q3_sum / icand ;
+    r4 = q4_sum / icand ;
     
     // Stampa i risultati
     cout << fixed << setprecision(3);
-    cout << "Rapporto 1: " << q1 << endl;
-    cout << "Rapporto 2: " << q2 << endl;
-    cout << "Rapporto 3: " << q3 << endl;
-    cout << "Rapporto 4: " << q4 << endl;
+    cout << "Rapporto 1: " << r1 << endl;
+    cout << "Rapporto 2: " << r2 << endl;
+    cout << "Rapporto 3: " << r3 << endl;
+    cout << "Rapporto 4: " << r4 << endl;
     cout << "Numero di candidati: " << icand << endl;
-    
-    return;
+
 }
