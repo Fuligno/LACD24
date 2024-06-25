@@ -44,7 +44,7 @@ void lettura() {
     treeS1234->Branch("t4", &t4, "t4/D");
     treeS1234->Branch("clock", &clock, "clock/D");
 
-    // Dati con trigger sui canali 1 e 4, dei soli canali triggerati
+    // Dati con trigger sui canali 2 e 4, dei soli canali triggerati
     TTree *treeS24_full = new TTree("s2-4_full", "QDC & TDC of Trigger with S2+S4");
 	treeS24_full->Branch("q2", &q2, "q2/D");
     treeS24_full->Branch("q4", &q4, "q4/D");
@@ -52,7 +52,7 @@ void lettura() {
     treeS24_full->Branch("t4", &t4, "t4/D");
     treeS24_full->Branch("clock", &clock, "clock/D");
 
-    // Dati con trigger sui canali 1 e 4, con segnale presente anche sui canali non triggerati
+    // Dati con trigger sui canali 2 e 4, con segnale presente anche sui canali non triggerati
     TTree *treeS24 = new TTree("s2-4", "QDC & TDC of Trigger with S2+S4");
 	treeS24->Branch("q1", &q1, "q1/D");
     treeS24->Branch("q2", &q2, "q2/D");
@@ -97,7 +97,7 @@ void lettura() {
     // Inizializza e apri il file di input
     ifstream file_in1(file1);
  
-    // Verifica che i file siano aperto
+    // Verifica che i file siano aperti
     if (!file_in3.is_open()) {
         cout << "Cannot open data file S3!" << endl;
         return;
@@ -115,6 +115,15 @@ void lettura() {
     //valori da prendere dalla macro rapporto.C
     double conv1, conv2, conv3, conv4;
     rapporto(conv2, conv1, conv3, conv4);
+
+
+/*
+Nota: sia per il rapporto che per tutti i cicli di lettura dei file, c'è sempre il 2 prima dell'1, così da avere
+degli output coerenti con i numeri dei detector: infatti il segnale del detector 1 e 2 erano invertiti sui cavi 
+2 e 1 durante la presa dati e quindi nelle colonne del file c'è sempre prima la colonna relativa al segnale 2 e 
+poi la colonna del segnale 1. Questo problema non è stato identificato prima poiché era un problema dei cavi
+alla sorgente.
+*/
 
 //------------------------------Lettura file S1+2+3+4------------------------------------
     // Loop fino alla fine del file, riga per riga
