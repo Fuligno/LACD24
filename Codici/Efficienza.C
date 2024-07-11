@@ -51,15 +51,4 @@ void Efficienza() {
     // Stampa i risultati su terminale
     cout << fixed << setprecision(4);
     cout << "Efficienza3: " << ef3 << "\t sigma: " << err << endl;
-
-    // Stampa i risultati su file di output
-    ofstream outFile("../Dati/QDC/efficienza.txt");     // Create an output file
-    if (!outFile.is_open()) {
-        cerr << "Unable to open output file!" << endl;  // Error message if output file can't be opened
-        return;
-    }
-    outFile << setprecision(4) << fixed;                // Set precision to 4 significant digits
-    outFile << "eff3\t sigma\n" << ef3 << "   " << err << endl;
-    outFile.close();                                    // Close the low resolution output file
-    return;
 }

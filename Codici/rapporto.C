@@ -66,15 +66,4 @@ void Rapporto(double &r1, double &r2, double &r3, double &r4) {
     cout << "Rapporto3: " << r3 << endl;
     cout << "Rapporto4: " << r4 << endl;
     cout << "Numero_candidati: " << icand << endl;
-
-    // Stampa i risultati su file di output
-    ofstream outFile("../Dati/QDC/rapporti.txt");       // Create an output file
-    if (!outFile.is_open()) {
-        cerr << "Unable to open output file!" << endl;  // Error message if output file can't be opened
-        return;
-    }
-    outFile << setprecision(4) << fixed;                // Set precision to 4 significant digits
-    outFile << "r1\t r2\t r3\t r4\t n_cand\n" << r1 << "   " << r2 << "   " << r3 << "   " << r4 << "   " << icand << endl;
-    outFile.close();                                    // Close the low resolution output file
-
 }
