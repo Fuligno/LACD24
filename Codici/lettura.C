@@ -110,7 +110,7 @@ void lettura() {
         cout << "Cannot open data file S1-2-3-4!" << endl;
         return;
     }
-    
+
 //------------------------------Conversione bassa -> alta risoluzione della QDC------------------------------------
     //valori da prendere dalla macro Rapporto.C
     double conv1, conv2, conv3, conv4;
@@ -197,5 +197,5 @@ alla sorgente.
     treeS3_full->Write();
     treeS3->Write();
     delete file_out;
-    
+
 }
