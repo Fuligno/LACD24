@@ -5,7 +5,7 @@
 #include <string>
 #include "TFile.h"
 #include "TTree.h"
-#include "rapporto.C"
+#include "Rapporto.C"
 
 using namespace std;
 
@@ -112,9 +112,9 @@ void lettura() {
     }
     
 //------------------------------Conversione bassa -> alta risoluzione della QDC------------------------------------
-    //valori da prendere dalla macro rapporto.C
+    //valori da prendere dalla macro Rapporto.C
     double conv1, conv2, conv3, conv4;
-    rapporto(conv2, conv1, conv3, conv4);
+    Rapporto(conv2, conv1, conv3, conv4);
 
 
 /*

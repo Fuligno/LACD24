@@ -5,8 +5,7 @@
 
 using namespace std;
 
-void Rapporto() {
-    double r1, r2, r3, r4;
+void Rapporto(double &r1, double &r2, double &r3, double &r4) {
     // Nome del file per lo stream di dati
     string file_name = "../Dati/AqqTrigger1234data0506ora1744.txt";
     
