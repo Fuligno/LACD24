@@ -13,7 +13,7 @@ using namespace std;
 
 void PlotQDC_low() {
     // Read the file
-    ifstream file("out_calibrazioneQDC_low.txt");
+    ifstream file("../Dati/QDC/out_calibrazioneQDC_low.txt");
     if (!file) {
         cout << "Error: Could not open file" << endl;
         return;

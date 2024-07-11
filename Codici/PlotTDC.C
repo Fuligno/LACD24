@@ -13,7 +13,7 @@ using namespace std;
 
 void PlotTDC() {
     // Read the file
-    ifstream file("out_calibrazioneTDC.txt");
+    ifstream file("../Dati/TDC/out_calibrazioneTDC.txt");
     if (!file) {
         cout << "Error: Could not open file" << endl;
         return;
