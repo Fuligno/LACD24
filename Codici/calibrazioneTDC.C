@@ -10,7 +10,7 @@ using namespace std;
 
 void calibrazioneTDC() {
     // Open the file that contains the list of .txt files
-    ifstream fileList("filenameTDC.txt");
+    ifstream fileList("../Dati/TDC/filenameTDC.txt");
     if (!fileList.is_open()) {
         cerr << "Unable to open file list!" << endl;  // Error message if file list can't be opened
         return;
@@ -26,7 +26,7 @@ void calibrazioneTDC() {
     fileList.close();                      // Close the file list
 
     const int nColumns = 4;                // We only use the first 4 columns
-    ofstream outFile("out_calibrazioneTDC.txt");  // Create an output file
+    ofstream outFile("../Dati/TDC/out_calibrazioneTDC.txt");  // Create an output file
     if (!outFile.is_open()) {
         cerr << "Unable to open output file!" << endl;  // Error message if output file can't be opened
         return;

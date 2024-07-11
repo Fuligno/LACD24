@@ -10,7 +10,7 @@ using namespace std;
 
 void calibrazioneQDC() {
     // Open the file that contains the list of .txt files
-    ifstream fileList("../Dati/QDC/filenameQDC.txt");
+    ifstream fileList("filenameQDC.txt");
     if (!fileList.is_open()) {
         cerr << "Unable to open file list!" << endl;  // Error message if file list can't be opened
         return;
@@ -27,18 +27,18 @@ void calibrazioneQDC() {
 
     const int nColumns = 8;  // We only use the first 8 columns
     // Initialize vectors to hold sums and sum of squares for high resolution data
-    vector<vector<double>> sum_high(fileNames.size(), vector<double>(nColumns, 0.0));
-    vector<vector<double>> sumSquares_high(fileNames.size(), vector<double>(nColumns, 0.0));
+    vector<vector<double> > sum_high(fileNames.size(), vector<double>(nColumns, 0.0));
+    vector<vector<double> > sumSquares_high(fileNames.size(), vector<double>(nColumns, 0.0));
     vector<int> rowCount_high(fileNames.size(), 0);  // Row counts for high resolution data
 
     // Initialize vectors to hold sums and sum of squares for low resolution data
-    vector<vector<double>> sum_low(fileNames.size(), vector<double>(nColumns, 0.0));
-    vector<vector<double>> sumSquares_low(fileNames.size(), vector<double>(nColumns, 0.0));
+    vector<vector<double> > sum_low(fileNames.size(), vector<double>(nColumns, 0.0));
+    vector<vector<double> > sumSquares_low(fileNames.size(), vector<double>(nColumns, 0.0));
     vector<int> rowCount_low(fileNames.size(), 0);  // Row counts for low resolution data
 
     // Loop through each file and process it
     for (size_t fileIndex = 0; fileIndex < fileNames.size(); ++fileIndex) {
-        ifstream dataFile("../Dati/QDC/"+fileNames[fileIndex]);
+        ifstream dataFile(fileNames[fileIndex]);
         if (!dataFile.is_open()) {
             cerr << "Unable to open data file: " << fileNames[fileIndex] << endl;  // Error if data file can't be opened
             continue;
@@ -68,7 +68,7 @@ void calibrazioneQDC() {
     }
 
     // Write data for high resolution to a separate file
-    ofstream outFile_high("../Dati/QDC/out_calibrazioneQDC_high.txt");
+    ofstream outFile_high("out_calibrazioneQDC_high.txt");
     if (!outFile_high.is_open()) {
         cerr << "Unable to open high resolution output file!" << endl;  // Error if output file can't be opened
         return;
@@ -101,7 +101,7 @@ void calibrazioneQDC() {
     outFile_high.close();  // Close the high resolution output file
 
     // Write data for low resolution to a separate file
-    ofstream outFile_low("../Dati/QDC/out_calibrazioneQDC_low.txt");
+    ofstream outFile_low("out_calibrazioneQDC_low.txt");
     if (!outFile_low.is_open()) {
         cerr << "Unable to open low resolution output file!" << endl;  // Error if output file can't be opened
         return;
