@@ -59,11 +59,23 @@ void Rapporto(double &r1, double &r2, double &r3, double &r4) {
         r1 = r2 = r3 = r4 = 0;
     }
     
-    // Stampa i risultati
+    // Stampa i risultati su terminale
     cout << fixed << setprecision(3);
     cout << "Rapporto1: " << r1 << endl;
     cout << "Rapporto2: " << r2 << endl;
     cout << "Rapporto3: " << r3 << endl;
     cout << "Rapporto4: " << r4 << endl;
     cout << "Numero_candidati: " << icand << endl;
+
+    // Stampa i risultati su file
+    ofstream outFile("../Dati/QDC/Rapporti.txt");  
+    if (!outFile.is_open()) {
+        cerr << "Unable to open output file!" << endl;  
+        return;
+    }
+    // Write the header for the output file
+    outFile << setprecision(4) << fixed;   // Set precision to 4 significant digits
+    outFile << "r1\t r2\t r3\t r4\n";  
+    outFile << r1 << "\t" << r2 << "\t" << r3 << "\t" << r4;                         
+    outFile.close();                          
 }

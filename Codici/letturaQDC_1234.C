@@ -10,7 +10,7 @@ void letturaQDC_1234() {
     double rapp1 = 0, rapp2 = 0, rapp3 = 0, rapp4 = 0;
 
     // Apro file in cui ho salvato i rapporti
-    string file_name = "../Dati/Rapporti.txt";
+    string file_name = "../Dati/QDC/Rapporti.txt";
     ifstream file_rapp(file_name);
  
     // Salva i rapporti in variabili
