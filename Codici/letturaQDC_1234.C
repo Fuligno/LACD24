@@ -94,6 +94,60 @@ void letturaQDC_1234() {
     h_q3->Scale(1.0 / (icand * bin_width));
     h_q4->Scale(1.0 / (icand * bin_width));
 
+
+    // Opzioni di stile
+    gStyle->SetOptFit(1111);
+    gStyle->SetOptStat(1111);
+
+    // Definisce Landau per fit
+    TF1 *landau_q1 = new TF1("landau_q1", "landau", xmin, xmax);
+    TF1 *landau_q2 = new TF1("landau_q2", "landau", xmin, xmax);
+    TF1 *landau_q3 = new TF1("landau_q3", "landau", xmin, xmax);
+    TF1 *landau_q4 = new TF1("landau_q4", "landau", xmin, xmax);
+
+    // Parametri iniziali
+    double initial_MPV = 1000.0;
+    double initial_constant = 1.0;
+
+    landau_q1->SetParameter(0, initial_constant);
+    landau_q1->SetParameter(1, initial_MPV);
+
+    landau_q2->SetParameter(0, initial_constant);
+    landau_q2->SetParameter(1, initial_MPV);
+
+    landau_q3->SetParameter(0, initial_constant);
+    landau_q3->SetParameter(1, initial_MPV);
+
+    landau_q4->SetParameter(0, initial_constant);
+    landau_q4->SetParameter(1, initial_MPV);
+
+    // Fit degli istogrammi
+    h_q1->Fit("landau_q1");
+    h_q2->Fit("landau_q2");
+    h_q3->Fit("landau_q3");
+    h_q4->Fit("landau_q4");
+    
+    // Disegna istogrammi + fit
+    TCanvas *c1 = new TCanvas("c1", "QDC Channel 0", 800, 600);
+    h_q1->Draw();
+    c1->Update();
+    c1->SaveAs("../Dati/QDC/QDC_Channel0.png");
+
+    TCanvas *c2 = new TCanvas("c2", "QDC Channel 1", 800, 600);
+    h_q2->Draw();
+    c2->Update();
+    c2->SaveAs("../Dati/QDC/QDC_Channel1.png");
+
+    TCanvas *c3 = new TCanvas("c3", "QDC Channel 2", 800, 600);
+    h_q3->Draw();
+    c3->Update();
+    c3->SaveAs("../Dati/QDC/QDC_Channel2.png");
+
+    TCanvas *c4 = new TCanvas("c4", "QDC Channel 3", 800, 600);
+    h_q4->Draw();
+    c4->Update();
+    c4->SaveAs("../Dati/QDC/QDC_Channel3.png");
+
     // Salva gli istogrammi in un file ROOT
     TFile outFile("../Dati/QDC/DataQDC_1234.root", "RECREATE");
     h_q1->Write();
