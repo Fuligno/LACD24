@@ -4,6 +4,8 @@
 #include <TH1F.h>
 #include <TCanvas.h>
 #include <TPad.h>
+#include <TStyle.h>
+#include <TApplication.h>
 
 void istogrammiTDC_s1234() {
     // Open the ROOT file
@@ -70,31 +72,39 @@ void istogrammiTDC_s1234() {
     TCanvas *canvas_s1234 = new TCanvas("canvas_s1234", "Histograms of t1, t2, t3, t4", 1200, 800);
     canvas_s1234->Divide(2, 2); // Divide the canvas into a 2x2 grid of pads
 
-    // Draw histograms on separate pads
+    // Draw histograms on separate pads with Gaussian fit and statistics box
     canvas_s1234->cd(1); // Move to the first pad
     h_t1_s1234->Fit("gaus");
-    h_t1_s1234->Draw("hist");
+    h_t1_s1234->Draw("hist e");
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
 
     canvas_s1234->cd(2); // Move to the second pad
     h_t2_s1234->Fit("gaus");
-    h_t2_s1234->Draw("hist");
+    h_t2_s1234->Draw("hist e");
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
 
     canvas_s1234->cd(3); // Move to the third pad
     h_t3_s1234->Fit("gaus");
-    h_t3_s1234->Draw("hist");
+    h_t3_s1234->Draw("hist e");
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
 
     canvas_s1234->cd(4); // Move to the fourth pad
     h_t4_s1234->Fit("gaus");
-    h_t4_s1234->Draw("hist");
+    h_t4_s1234->Draw("hist e");
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
 
     // Save the canvas to a single file
     canvas_s1234->SaveAs("../Dati/Plots/istogrammiTDC_s1-2-3-4.png");
 
     // Clean up
-    file->Close();
+    /*file->Close();
     delete canvas_s1234;
     delete h_t1_s1234;
     delete h_t2_s1234;
     delete h_t3_s1234;
-    delete h_t4_s1234;
+    delete h_t4_s1234;*/
 }
