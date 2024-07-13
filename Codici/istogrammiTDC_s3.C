@@ -3,7 +3,7 @@
 #include <TTree.h>
 #include <TH1F.h>
 #include <TCanvas.h>
-#include <TPad.h>
+#include <TStyle.h>
 
 void istogrammiTDC_s3() {
     // Open the ROOT file
@@ -23,8 +23,8 @@ void istogrammiTDC_s3() {
     }
 
     // Create histograms for each branch
-    int nbins = 1050;
-    double xmin = 400, xmax = 1450;
+    int nbins = 1000;
+    double xmin = 450, xmax = 1450;
     TH1F *h_t1_s3 = new TH1F("h_t1_s3", "t1_s3", nbins, xmin, xmax);
     TH1F *h_t2_s3 = new TH1F("h_t2_s3", "t2_s3", nbins, xmin, xmax);
     TH1F *h_t3_s3 = new TH1F("h_t3_s3", "t3_s3", nbins, xmin, xmax);
@@ -48,10 +48,10 @@ void istogrammiTDC_s3() {
     h_t4_s3->Scale(1.0 / (bin_width * nentries_t4));
 
     // Set half-transparent fill styles
-    h_t1_s3->SetFillStyle(3003); // Transparent fill
-    h_t2_s3->SetFillStyle(3003); // Transparent fill
-    h_t3_s3->SetFillStyle(3003); // Transparent fill
-    h_t4_s3->SetFillStyle(3003); // Transparent fill
+    h_t1_s3->SetFillStyle(3002); // 
+    h_t2_s3->SetFillStyle(3002); // 
+    h_t3_s3->SetFillStyle(3002); // 
+    h_t4_s3->SetFillStyle(3002); // 
 
     // Set fill colors
     h_t1_s3->SetFillColor(kOrange);
@@ -69,31 +69,35 @@ void istogrammiTDC_s3() {
     TCanvas *canvas_s3 = new TCanvas("canvas_s3", "Histograms of t1, t2, t3, t4", 1200, 800);
     canvas_s3->Divide(2, 2); // Divide the canvas into a 2x2 grid of pads
 
+    // Set global style options
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
+
     // Draw histograms on separate pads
     canvas_s3->cd(1); // Move to the first pad
     h_t1_s3->Fit("gaus");
-    h_t1_s3->Draw("hist");
+    h_t1_s3->Draw("hist e");
 
     canvas_s3->cd(2); // Move to the second pad
     h_t2_s3->Fit("gaus");
-    h_t2_s3->Draw("hist");
+    h_t2_s3->Draw("hist e");
 
     canvas_s3->cd(3); // Move to the third pad
     h_t3_s3->Fit("gaus");
-    h_t3_s3->Draw("hist");
+    h_t3_s3->Draw("hist e");
 
     canvas_s3->cd(4); // Move to the fourth pad
     h_t4_s3->Fit("gaus");
-    h_t4_s3->Draw("hist");
+    h_t4_s3->Draw("hist e");
 
     // Save the canvas to a single file
     canvas_s3->SaveAs("../Dati/Plots/istogrammiTDC_s3.png");
 
     // Clean up
-    file->Close();
+    /*file->Close();
     delete canvas_s3;
     delete h_t1_s3;
     delete h_t2_s3;
     delete h_t3_s3;
-    delete h_t4_s3;
+    delete h_t4_s3;*/
 }
