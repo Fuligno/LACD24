@@ -3,7 +3,7 @@
 #include <TTree.h>
 #include <TH1F.h>
 #include <TCanvas.h>
-#include <TPad.h>
+#include <TStyle.h>
 #include <TF1.h>
 
 void istogrammiTDC_s24() {
@@ -71,31 +71,35 @@ void istogrammiTDC_s24() {
     TCanvas *canvas_s24 = new TCanvas("canvas_s24", "Histograms of t1, t2, t3, t4", 1200, 800);
     canvas_s24->Divide(2, 2); // Divide the canvas into a 2x2 grid of pads
 
+    // Set global style options
+    gStyle->SetOptFit(1111); // Show fit results
+    gStyle->SetOptStat(1111); // Show statistics box
+
     // Draw histograms on separate pads
     canvas_s24->cd(1); // Move to the first pad
     h_t1_s24->Fit("gaus");
-    h_t1_s24->Draw("hist");
+    h_t1_s24->Draw("hist e");
 
     canvas_s24->cd(2); // Move to the second pad
     h_t2_s24->Fit("gaus");
-    h_t2_s24->Draw("hist");
+    h_t2_s24->Draw("hist e");
 
     canvas_s24->cd(3); // Move to the third pad
     h_t3_s24->Fit("gaus");
-    h_t3_s24->Draw("hist");
+    h_t3_s24->Draw("hist e");
 
     canvas_s24->cd(4); // Move to the fourth pad
     h_t4_s24->Fit("gaus");
-    h_t4_s24->Draw("hist");
+    h_t4_s24->Draw("hist e");
 
     // Save the canvas to a single file
     canvas_s24->SaveAs("../Dati/Plots/istogrammiTDC_s2-4.png");
 
     // Clean up
-    file->Close();
+    /*file->Close();
     delete canvas_s24;
     delete h_t1_s24;
     delete h_t2_s24;
     delete h_t3_s24;
-    delete h_t4_s24;
+    delete h_t4_s24;*/
 }
