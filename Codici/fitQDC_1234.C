@@ -140,12 +140,17 @@ void fitQDC_1234() {
     h_q4->Draw();
     c4_gauss->Update();
     c4_gauss->SaveAs("../Dati/QDC/QDC_Channel3_Gauss.png");
-
+    
     // Definisce Landau * Gauss per fit
-    TF1 *landau_gaus_q1 = new TF1("landau_gaus_q1", "landau(3) + gaus(3)", xmin, xmax);
-    TF1 *landau_gaus_q2 = new TF1("landau_gaus_q2", "landau(3) + gaus(3)", xmin, xmax);
-    TF1 *landau_gaus_q3 = new TF1("landau_gaus_q3", "landau(3) + gaus(3)", xmin, xmax);
-    TF1 *landau_gaus_q4 = new TF1("landau_gaus_q4", "landau(3) + gaus(3)", xmin, xmax);
+    TF1Convolution *convolution_q1 = new TF1Convolution("landau_q1", "gauss_q1", xmin, xmax);
+    TF1Convolution *convolution_q2 = new TF1Convolution("landau_q2", "gauss_q2", xmin, xmax);
+    TF1Convolution *convolution_q3 = new TF1Convolution("landau_q3", "gauss_q3", xmin, xmax);
+    TF1Convolution *convolution_q4 = new TF1Convolution("landau_q4", "gauss_q4", xmin, xmax);
+
+    TF1 *landau_gauss_q1 = new TF1("landau_gauss_q1", *convolution_q1, xmin, xmax, convolution_q1->GetNpar());
+    TF1 *landau_gauss_q2 = new TF1("landau_gauss_q2", *convolution_q2, xmin, xmax, convolution_q2->GetNpar());
+    TF1 *landau_gauss_q3 = new TF1("landau_gauss_q3", *convolution_q3, xmin, xmax, convolution_q3->GetNpar());
+    TF1 *landau_gauss_q4 = new TF1("landau_gauss_q4", *convolution_q4, xmin, xmax, convolution_q4->GetNpar());
 
     // Parametri iniziali
     cost1 = 1.0;
@@ -154,10 +159,10 @@ void fitQDC_1234() {
     sigma = 200.0;
     MPV = mean = 1000.0;
 
-    landau_gaus_q1->SetParameters(cost1, MPV, sigma_landau, cost2, MPV, sigma);
-    landau_gaus_q2->SetParameters(cost1, MPV, sigma_landau, cost2, MPV, sigma);
-    landau_gaus_q3->SetParameters(cost1, MPV, sigma_landau, cost2, MPV, sigma);
-    landau_gaus_q4->SetParameters(cost1, MPV, sigma_landau, cost2, MPV, sigma);
+    landau_gauss_q1->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    landau_gauss_q2->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    landau_gauss_q3->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    landau_gauss_q4->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
 
     // Fit degli istogrammi
     h_q1->Fit("landau_gaus_q1");
