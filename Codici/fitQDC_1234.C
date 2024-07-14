@@ -98,54 +98,56 @@ void fitQDC_1234() {
     c4_landau->Update();
     c4_landau->SaveAs("../Dati/QDC/QDC_Channel3_Landau.png");
 
-    // Definisce Gauss per fit
-    TF1 *gauss_q1 = new TF1("gauss_q1", "gaus", xmin, xmax);
-    TF1 *gauss_q2 = new TF1("gauss_q2", "gaus", xmin, xmax);
-    TF1 *gauss_q3 = new TF1("gauss_q3", "gaus", xmin, xmax);
-    TF1 *gauss_q4 = new TF1("gauss_q4", "gaus", xmin, xmax);
+    // Definisce Landau + Gauss per fit
+    TF1 *gauss_q1 = new TF1("gauss_q1", "landau(3) + gaus(3)", xmin, xmax);
+    TF1 *gauss_q2 = new TF1("gauss_q2", "landau(3) + gaus(3)", xmin, xmax);
+    TF1 *gauss_q3 = new TF1("gauss_q3", "landau(3) + gaus(3)", xmin, xmax);
+    TF1 *gauss_q4 = new TF1("gauss_q4", "landau(3) + gaus(3)", xmin, xmax);
 
     // Parametri iniziali
+    cost1 = 1.0;
+    MPV = 1000.0;
+    sigma_landau = 100.0;
     double cost2 = 1.0;
     double mean = 1000.0;
     double sigma = 200.0;
 
-    gauss_q1->SetParameters(cost2, mean, sigma);
-    gauss_q2->SetParameters(cost2, mean, sigma);
-    gauss_q3->SetParameters(cost2, mean, sigma);
-    gauss_q4->SetParameters(cost2, mean, sigma);
+    gauss_q1->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    gauss_q2->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    gauss_q3->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
+    gauss_q4->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
 
-    // Fit degli istogrammi
     h_q1->Fit("gauss_q1");
     h_q2->Fit("gauss_q2");
     h_q3->Fit("gauss_q3");
     h_q4->Fit("gauss_q4");
     
     // Disegna istogrammi + fit
-    TCanvas *c1_gauss = new TCanvas("c1_gauss", "QDC Channel 0 Gauss", 800, 600);
+    TCanvas *c1_gauss = new TCanvas("c1_gauss", "QDC Channel 0 Landau+Gauss", 800, 600);
     h_q1->Draw();
     c1_gauss->Update();
     c1_gauss->SaveAs("../Dati/QDC/QDC_Channel0_Gauss.png");
 
-    TCanvas *c2_gauss = new TCanvas("c2_gauss", "QDC Channel 1 Gauss", 800, 600);
+    TCanvas *c2_gauss = new TCanvas("c2_gauss", "QDC Channel 1 Landau+Gauss", 800, 600);
     h_q2->Draw();
     c2_gauss->Update();
     c2_gauss->SaveAs("../Dati/QDC/QDC_Channel1_Gauss.png");
 
-    TCanvas *c3_gauss = new TCanvas("c3_gauss", "QDC Channel 2 Gauss", 800, 600);
+    TCanvas *c3_gauss = new TCanvas("c3_gauss", "QDC Channel 2 Landau+Gauss", 800, 600);
     h_q3->Draw();
     c3_gauss->Update();
     c3_gauss->SaveAs("../Dati/QDC/QDC_Channel2_Gauss.png");
 
-    TCanvas *c4_gauss = new TCanvas("c4_gauss", "QDC Channel 3 Gauss", 800, 600);
+    TCanvas *c4_gauss = new TCanvas("c4_gauss", "QDC Channel 3 Landau+Gauss", 800, 600);
     h_q4->Draw();
     c4_gauss->Update();
     c4_gauss->SaveAs("../Dati/QDC/QDC_Channel3_Gauss.png");
     
     // Definisce Landau * Gauss per fit
-    TF1Convolution *convolution_q1 = new TF1Convolution("landau_q1", "gauss_q1", xmin, xmax);
-    TF1Convolution *convolution_q2 = new TF1Convolution("landau_q2", "gauss_q2", xmin, xmax);
-    TF1Convolution *convolution_q3 = new TF1Convolution("landau_q3", "gauss_q3", xmin, xmax);
-    TF1Convolution *convolution_q4 = new TF1Convolution("landau_q4", "gauss_q4", xmin, xmax);
+    TF1Convolution *convolution_q1 = new TF1Convolution("landau_q1", "gauss_q1", -1000, 6000);
+    TF1Convolution *convolution_q2 = new TF1Convolution("landau_q2", "gauss_q2", -1000, 6000);
+    TF1Convolution *convolution_q3 = new TF1Convolution("landau_q3", "gauss_q3", -1000, 6000);
+    TF1Convolution *convolution_q4 = new TF1Convolution("landau_q4", "gauss_q4", -1000, 6000);
 
     TF1 *landau_gauss_q1 = new TF1("landau_gauss_q1", *convolution_q1, xmin, xmax, convolution_q1->GetNpar());
     TF1 *landau_gauss_q2 = new TF1("landau_gauss_q2", *convolution_q2, xmin, xmax, convolution_q2->GetNpar());
@@ -154,10 +156,11 @@ void fitQDC_1234() {
 
     // Parametri iniziali
     cost1 = 1.0;
+    MPV = 1000.0;
     sigma_landau = 100.0;
     cost2 = 1.0;
+    mean = 1000.0;
     sigma = 200.0;
-    MPV = mean = 1000.0;
 
     landau_gauss_q1->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
     landau_gauss_q2->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
@@ -171,22 +174,22 @@ void fitQDC_1234() {
     h_q4->Fit("landau_gaus_q4");
 
     // Disegna istogrammi + fit
-    TCanvas *c1_conv = new TCanvas("c1_conv", "QDC Channel 0 Conv", 800, 600);
+    TCanvas *c1_conv = new TCanvas("c1_conv", "QDC Channel 0 Landau*Gauss", 800, 600);
     h_q1->Draw();
     c1_conv->Update();
     c1_conv->SaveAs("../Dati/QDC/QDC_Channel0_Conv.png");
 
-    TCanvas *c2_conv = new TCanvas("c2_conv", "QDC Channel 1 Conv", 800, 600);
+    TCanvas *c2_conv = new TCanvas("c2_conv", "QDC Channel 1 Landau*Gauss", 800, 600);
     h_q2->Draw();
     c2_conv->Update();
     c2_conv->SaveAs("../Dati/QDC/QDC_Channel1_Conv.png");
 
-    TCanvas *c3_conv = new TCanvas("c3_conv", "QDC Channel 2 Conv", 800, 600);
+    TCanvas *c3_conv = new TCanvas("c3_conv", "QDC Channel 2 Landau*Gauss", 800, 600);
     h_q3->Draw();
     c3_conv->Update();
     c3_conv->SaveAs("../Dati/QDC/QDC_Channel2_Conv.png");
 
-    TCanvas *c4_conv = new TCanvas("c4_conv", "QDC Channel 3 Conv", 800, 600);
+    TCanvas *c4_conv = new TCanvas("c4_conv", "QDC Channel 3 Landau*Gauss", 800, 600);
     h_q4->Draw();
     c4_conv->Update();
     c4_conv->SaveAs("../Dati/QDC/QDC_Channel3_Conv.png");
