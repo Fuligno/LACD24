@@ -81,22 +81,22 @@ void fitQDC_1234() {
     TCanvas *c1_landau = new TCanvas("c1_landau", "QDC Channel 0 Landau", 800, 600);
     h_q1->Draw();
     c1_landau->Update();
-    c1_landau->SaveAs("../Dati/QDC/QDC_Channel0_Landau.png");
+    c1_landau->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel0_Landau.png");
 
     TCanvas *c2_landau = new TCanvas("c2_landau", "QDC Channel 1 Landau", 800, 600);
     h_q2->Draw();
     c2_landau->Update();
-    c2_landau->SaveAs("../Dati/QDC/QDC_Channel1_Landau.png");
+    c2_landau->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel1_Landau.png");
 
     TCanvas *c3_landau = new TCanvas("c3_landau", "QDC Channel 2 Landau", 800, 600);
     h_q3->Draw();
     c3_landau->Update();
-    c3_landau->SaveAs("../Dati/QDC/QDC_Channel2_Landau.png");
+    c3_landau->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel2_Landau.png");
 
     TCanvas *c4_landau = new TCanvas("c4_landau", "QDC Channel 3 Landau", 800, 600);
     h_q4->Draw();
     c4_landau->Update();
-    c4_landau->SaveAs("../Dati/QDC/QDC_Channel3_Landau.png");
+    c4_landau->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel3_Landau.png");
 
     // Definisce Landau + Gauss per fit
     TF1 *gauss_q1 = new TF1("gauss_q1", "landau(3) + gaus(3)", xmin, xmax);
@@ -126,22 +126,22 @@ void fitQDC_1234() {
     TCanvas *c1_gauss = new TCanvas("c1_gauss", "QDC Channel 0 Landau+Gauss", 800, 600);
     h_q1->Draw();
     c1_gauss->Update();
-    c1_gauss->SaveAs("../Dati/QDC/QDC_Channel0_Gauss.png");
+    c1_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel0_Gauss.png");
 
     TCanvas *c2_gauss = new TCanvas("c2_gauss", "QDC Channel 1 Landau+Gauss", 800, 600);
     h_q2->Draw();
     c2_gauss->Update();
-    c2_gauss->SaveAs("../Dati/QDC/QDC_Channel1_Gauss.png");
+    c2_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel1_Gauss.png");
 
     TCanvas *c3_gauss = new TCanvas("c3_gauss", "QDC Channel 2 Landau+Gauss", 800, 600);
     h_q3->Draw();
     c3_gauss->Update();
-    c3_gauss->SaveAs("../Dati/QDC/QDC_Channel2_Gauss.png");
+    c3_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel2_Gauss.png");
 
     TCanvas *c4_gauss = new TCanvas("c4_gauss", "QDC Channel 3 Landau+Gauss", 800, 600);
     h_q4->Draw();
     c4_gauss->Update();
-    c4_gauss->SaveAs("../Dati/QDC/QDC_Channel3_Gauss.png");
+    c4_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel3_Gauss.png");
     
     // Definisce Landau * Gauss per fit
     TF1Convolution *convolution_q1 = new TF1Convolution("landau_q1", "gauss_q1", -1000, 6000);
@@ -168,26 +168,26 @@ void fitQDC_1234() {
     landau_gauss_q4->SetParameters(cost1, MPV, sigma_landau, cost2, mean, sigma);
 
     // Fit degli istogrammi
-    h_q1->Fit("landau_gaus_q1");
-    h_q2->Fit("landau_gaus_q2");
-    h_q3->Fit("landau_gaus_q3");
-    h_q4->Fit("landau_gaus_q4");
+    h_q1->Fit("landau_gauss_q1");
+    h_q2->Fit("landau_gauss_q2");
+    h_q3->Fit("landau_gauss_q3");
+    h_q4->Fit("landau_gauss_q4");
 
     // Disegna istogrammi + fit
     TCanvas *c1_conv = new TCanvas("c1_conv", "QDC Channel 0 Landau*Gauss", 800, 600);
     h_q1->Draw();
     c1_conv->Update();
-    c1_conv->SaveAs("../Dati/QDC/QDC_Channel0_Conv.png");
+    c1_conv->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel0_Conv.png");
 
     TCanvas *c2_conv = new TCanvas("c2_conv", "QDC Channel 1 Landau*Gauss", 800, 600);
     h_q2->Draw();
     c2_conv->Update();
-    c2_conv->SaveAs("../Dati/QDC/QDC_Channel1_Conv.png");
+    c2_conv->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel1_Conv.png");
 
     TCanvas *c3_conv = new TCanvas("c3_conv", "QDC Channel 2 Landau*Gauss", 800, 600);
     h_q3->Draw();
     c3_conv->Update();
-    c3_conv->SaveAs("../Dati/QDC/QDC_Channel2_Conv.png");
+    c3_conv->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel2_Conv.png");
 
     TCanvas *c4_conv = new TCanvas("c4_conv", "QDC Channel 3 Landau*Gauss", 800, 600);
     h_q4->Draw();
@@ -195,7 +195,7 @@ void fitQDC_1234() {
     c4_conv->SaveAs("../Dati/QDC/QDC_Channel3_Conv.png");
 
     // Salva i risultati in un file ROOT
-    TFile outFile("../Dati/QDC/DataQDC_1234.root", "RECREATE");
+    TFile outFile("../Dati/QDC/QDC_1234/DataQDC_1234.root", "RECREATE");
 
     c1_landau->Write();
     c2_landau->Write();
