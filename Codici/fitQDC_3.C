@@ -109,7 +109,7 @@ void fitQDC_3() {
     c3_conv->SaveAs("../Dati/QDC/QDC_3/QDC_Channel2_Conv.png");
 
     // Salva i risultati in un file ROOT
-    TFile outFile("../Dati/QDC/QDC_3/DataQDC_1234.root", "RECREATE");
+    TFile outFile("../Dati/QDC/QDC_3/DataQDC_3.root", "RECREATE");
 
     c3_landau->Write();
   
