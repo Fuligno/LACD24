@@ -107,6 +107,9 @@ void calibrazioneTDC() {
     // Write header to the text file
     textFile << "Filename\tMean_t1\tErr_t1\tMean_t2\tErr_t2\tMean_t3\tErr_t3\tMean_t4\tErr_t4\tx_value\n";
 
+    int count = filenames.size();	// salvo il numero di eventi
+    cout << count << endl;
+
     // Scrivi i risultati dai vettori nel file di testo
     for (size_t i = 0; i < filenames.size(); ++i) {
         textFile << filenames[i] << "\t"
@@ -163,7 +166,7 @@ file.close();
     gr_t1->SetLineColor(kRed);
     gr_t1->SetTitle("Calibrazione TDC;Ritardi [ns];Conteggi");
 
-    TF1 *linear_t1 = new TF1("linear_t1", "pol1", 0, x_values.size());
+    TF1 *linear_t1 = new TF1("linear_t1", "pol1", 0.0, 100.0);	// definisco l'intervallo della funzione di fit tra 0.0 e 100.0 per coprire tutti quanti i punti sperimentali
     linear_t1->SetLineColor(kRed);
     gr_t1->Fit(linear_t1, "Q");
     //gr_t1->SetStats(0);
@@ -181,7 +184,7 @@ file.close();
     gr_t2->SetMarkerColor(kGreen);
     gr_t2->SetLineColor(kGreen);
 
-    TF1 *linear_t2 = new TF1("linear_t2", "pol1", 0, x_values.size());
+    TF1 *linear_t2 = new TF1("linear_t2", "pol1", 0.0, 100.0);
     linear_t2->SetLineColor(kGreen);
     gr_t2->Fit(linear_t2, "Q");
     //gr_t2->SetStats(0);
@@ -199,7 +202,7 @@ file.close();
     gr_t3->SetMarkerColor(kCyan);
     gr_t3->SetLineColor(kCyan);
 
-    TF1 *linear_t3 = new TF1("linear_t3", "pol1", 0, x_values.size());
+    TF1 *linear_t3 = new TF1("linear_t3", "pol1", 0.0, 100.0);
     linear_t3->SetLineColor(kCyan);
     gr_t3->Fit(linear_t3, "Q");
     //gr_t3->SetStats(0);
@@ -217,7 +220,7 @@ file.close();
     gr_t4->SetMarkerColor(kViolet);
     gr_t4->SetLineColor(kViolet);
 
-    TF1 *linear_t4 = new TF1("linear_t4", "pol1", 0, x_values.size());
+    TF1 *linear_t4 = new TF1("linear_t4", "pol1", 0.0, 100.0);
     linear_t4->SetLineColor(kViolet);
     gr_t4->Fit(linear_t4, "Q");
     //gr_t4->SetStats(0);
@@ -259,6 +262,13 @@ file.close();
     statsBox->AddText(Form("t4: m = %.4f ± %.4f, q = %.4f ± %.4f", m_t4, m_t4_err, q_t4, q_t4_err));
 
     statsBox->Draw();
+    
+    TLegend* leg = new TLegend(0.2,0.65,0.5,0.8);		// costruzione della legenda
+    leg->AddEntry(gr_t1, "Canale 0");
+    leg->AddEntry(gr_t2, "Canale 1");
+    leg->AddEntry(gr_t3, "Canale 2");
+    leg->AddEntry(gr_t4, "Canale 3");
+    leg->Draw();
 
     // Salva la canvas come file PNG
     c_calibr->Update();
@@ -266,6 +276,20 @@ file.close();
 
     ///////////////////////////////////////////////////////////////////////////
     // Plot dei residui
+    
+    vector<double> sigma_res;		// vettore che contiene gli errori sui residui
+    double sigma_res_value;
+    cout << "Dimensione vettore ritardi: " << x_values.size() << endl;
+    cout << "Dimensione vettore errori ritardi: " << rit_errors.size() << endl;
+    cout << "Dimensione vettore valori in y: " << means_t1.size() << endl;
+    cout << "Dimensione vettore errori valori in y: " << errors_t1.size() << endl;
+    
+    // --- parte per calcolare gli errori sui residui ---
+    for (int i=0; i < x_values.size(); i++) {
+	    sigma_res_value = sqrt(errors_t1[i]*errors_t1[i] + rit_errors[i]*linear_t1->Derivative(x_values[i])*rit_errors[i]*linear_t1->Derivative(x_values[i]));	// propagazione degli errori per includere sia errore su x che su y. Serve per calcolare correttamente chiquadro/ngf
+	    sigma_res.push_back(sigma_res_value);
+	    float resid_della_ricca = (means_t1[i]-linear_t1->Eval(x_values[i]))/sigma_res_value;
+    }
 
     TF1 *line_0 = new TF1("line_0", "[0]*x", -1, 100);
     line_0->SetLineColor(kBlack);
@@ -281,13 +305,31 @@ file.close();
         double fit_value = linear_t1->Eval(x_values[i]);
         double residual = (means_t1[i] - fit_value);
         residui_t1->SetPoint(i, x_values[i], residual);
-        residui_t1->SetPointError(i, 0, errors_t1[i]);
+        residui_t1->SetPointError(i, 0, sigma_res[i]);
+	   //residui_t1->SetPointError(i, 0, errors_t1[i]);
     }
+    
+    TF1 *horiz1 = new TF1("horiz_t1", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
+    
     residui_t1->SetTitle("Residui t1;Ritardi [ns];Residui");
     residui_t1->SetMarkerStyle(20);
     residui_t1->SetMarkerColor(kRed);
     residui_t1->Draw("AP");
-    line_0->Draw("same");
+    //line_0->Draw("same");
+    residui_t1->Fit("horiz_t1");
+    horiz1->Draw("same");
+    
+    TPaveText *eqretta1 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
+    eqretta1->SetBorderSize(1);
+    eqretta1->SetFillColor(kWhite);
+    eqretta1->SetTextAlign(20);
+    eqretta1->SetTextSize(0.03);
+    double mr_t1 = horiz1->GetParameter(1);
+    double mr_t1_err = horiz1->GetParError(1);
+    double qr_t1 = horiz1->GetParameter(0);
+    double qr_t1_err = horiz1->GetParError(0);
+    eqretta1->AddText(Form("m = %.4f +/- %.4f, q = %.4f +/- %.4f", mr_t1, mr_t1_err, qr_t1, qr_t1_err));
+    eqretta1->Draw("same");
 
     // Residui per t2
     c_residui->cd(2);
@@ -340,4 +382,22 @@ file.close();
     // Salva la canvas dei residui come file PNG
     c_residui->Update();
     c_residui->SaveAs("../Dati/TDC/calibrazioneTDC_residui.png");
+    
+    // Istogramma dei residui per t1
+    TH1F* h1 = new TH1F("h1", "Istogramma residui t1", 20, -5.0, 5.0);
+    for (int i=0; i < x_values.size(); i++) {
+	    float resid_della_ricca = (means_t1[i]-linear_t1->Eval(x_values[i]))/sigma_res[i];
+	    h1->Fill(resid_della_ricca);
+    }
+    h1->SetFillColorAlpha(kRed, 1.0);	// colore di riempimento dell'istogramma
+    h1->SetFillStyle(3002);	// pattern di riempimento
+    TCanvas* c2 = new TCanvas("c2", "Istogramma dei residui TDC", 600, 0, 500, 500);
+    TF1* gauss1 = new TF1("gauss1", "gaus", -2.0, 2.0);
+    gauss1->SetParameters(3.0, 0.0, 1.0);
+    c2->cd();
+    h1->Fit(gauss1);
+    h1->Draw("E1");	// disegno le barre di errore
+    h1->Draw("bar same");
+    //gStyle->SetOptStat(0);
+    gStyle->SetOptFit(1111);	// visualizzo le statistiche
 }
