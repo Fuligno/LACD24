@@ -142,7 +142,7 @@ void fitQDC_1234() {
     h_q4->Draw();
     c4_gauss->Update();
     c4_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel3_Gauss.png");
-    
+    /*
     // Definisce Landau * Gauss per fit
     TF1Convolution *convolution_q1 = new TF1Convolution("landau_q1", "gauss_q1", -1000, 6000);
     TF1Convolution *convolution_q2 = new TF1Convolution("landau_q2", "gauss_q2", -1000, 6000);
@@ -213,6 +213,6 @@ void fitQDC_1234() {
     c4_conv->Write();
 
     outFile.Close();
-
+*/
     return;
 }
