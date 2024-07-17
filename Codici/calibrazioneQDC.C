@@ -163,6 +163,83 @@ void calibrazioneQDC() {
     textFileHigh.close();
     textFileLow.close();
 
+    // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
+    
+   ifstream file("../Dati/QDC/Attenuazioni_calibrazione_QDC.txt");
+    if (!file.is_open()) {
+        cout << "Cannot open file!" << endl;
+        return;
+    }
+
+    vector<double> att_errors1, att_errors2, att_errors3, att_errors4;
+    double A, q0, sigma_q0;
+
+    // Read the file line by line and calculate errors
+    getline(file, line); // Skip the header
+
+    // Channel 1
+    q0 = 21.593 / 50;
+    sigma_q0 = 0.088 / 50;
+    while (file >> A) {
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
+            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+        att_errors1.push_back(err_value);
+        cout << "err_value (channel 1): " << err_value << endl;
+    }
+
+    // Reset file stream to read again
+    file.clear();
+    file.seekg(0, ios::beg);
+    getline(file, line); // Skip the header again
+
+    // Channel 2
+    q0 = 21.223;
+    sigma_q0 = 0.088 / 50;
+    while (file >> A) {
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
+            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+        att_errors2.push_back(err_value);
+        cout << "err_value (channel 2): " << err_value << endl;
+    }
+
+    // Reset file stream to read again
+    file.clear();
+    file.seekg(0, ios::beg);
+    getline(file, line); // Skip the header again
+
+    // Channel 3
+    q0 = 20.894;
+    sigma_q0 = 0.086 / 50;
+    while (file >> A) {
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
+            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+        att_errors3.push_back(err_value);
+        cout << "err_value (channel 3): " << err_value << endl;
+    }
+
+    // Reset file stream to read again
+    file.clear();
+    file.seekg(0, ios::beg);
+    getline(file, line); // Skip the header again
+
+    // Channel 4
+    q0 = 21.924;
+    sigma_q0 = 0.087 / 50;
+    while (file >> A) {
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
+            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+        att_errors4.push_back(err_value);
+        cout << "err_value (channel 4): " << err_value << endl;
+    }
+
+    file.close();
+
+
+
+
+    // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
+
+
 //////////////////////////////////////////////////////////////////////////////////
 
     // Crea una canvas
@@ -176,7 +253,7 @@ void calibrazioneQDC() {
     TGraphErrors *gr_q1_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_q1_low->SetPoint(i, x1[i], means_q1_low[i]);
-        gr_q1_low->SetPointError(i, 0, errors_q1_low[i]);
+        gr_q1_low->SetPointError(i, att_errors1[i], errors_q1_low[i]);
     }
     gr_q1_low->SetMarkerStyle(20);
     gr_q1_low->SetMarkerColor(kRed);
@@ -196,7 +273,7 @@ void calibrazioneQDC() {
     TGraphErrors *gr_q2_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_q2_low->SetPoint(i, x2[i], means_q2_low[i]);
-        gr_q2_low->SetPointError(i, 0, errors_q2_low[i]);
+        gr_q2_low->SetPointError(i, att_errors2[i], errors_q2_low[i]);
     }
     gr_q2_low->SetMarkerStyle(21);
     gr_q2_low->SetMarkerColor(kBlue);
@@ -213,7 +290,7 @@ void calibrazioneQDC() {
     TGraphErrors *gr_q3_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_q3_low->SetPoint(i, x3[i], means_q3_low[i]);
-        gr_q3_low->SetPointError(i, 0, errors_q3_low[i]);
+        gr_q3_low->SetPointError(i, att_errors3[i], errors_q3_low[i]);
     }
     gr_q3_low->SetMarkerStyle(22);
     gr_q3_low->SetMarkerColor(kGreen);
@@ -230,7 +307,7 @@ void calibrazioneQDC() {
     TGraphErrors *gr_q4_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_q4_low->SetPoint(i, x4[i], means_q4_low[i]);
-        gr_q4_low->SetPointError(i, 0, errors_q4_low[i]);
+        gr_q4_low->SetPointError(i, att_errors4[i], errors_q4_low[i]);
     }
     gr_q4_low->SetMarkerStyle(23);
     gr_q4_low->SetMarkerColor(kMagenta);
@@ -250,7 +327,7 @@ void calibrazioneQDC() {
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q1_high[i]<=3840) {
             gr_q1_high->SetPoint(k, x1[i], means_q1_high[i]);
-            gr_q1_high->SetPointError(k, 0, errors_q1_high[i]);
+            gr_q1_high->SetPointError(k, att_errors1[i], errors_q1_high[i]);
             k++;
         }
     }
@@ -271,7 +348,7 @@ void calibrazioneQDC() {
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q2_high[i]<=3840) {
             gr_q2_high->SetPoint(k, x2[i], means_q2_high[i]);
-            gr_q2_high->SetPointError(k, 0, errors_q2_high[i]);
+            gr_q2_high->SetPointError(k, att_errors2[i], errors_q2_high[i]);
             k++;
         }
     }
@@ -292,7 +369,7 @@ void calibrazioneQDC() {
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q3_high[i]<=3840) {
             gr_q3_high->SetPoint(k, x3[i], means_q3_high[i]);
-            gr_q3_high->SetPointError(k, 0, errors_q3_high[i]);
+            gr_q3_high->SetPointError(k, att_errors3[i], errors_q3_high[i]);
             k++;
         }
     }
@@ -313,7 +390,7 @@ void calibrazioneQDC() {
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q4_high[i]<=3840) {
             gr_q4_high->SetPoint(k, x4[i], means_q4_high[i]);
-            gr_q4_high->SetPointError(k, 0, errors_q4_high[i]);
+            gr_q4_high->SetPointError(k, att_errors4[i], errors_q4_high[i]);
             k++;
         }
     }
