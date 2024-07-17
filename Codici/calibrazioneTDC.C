@@ -155,7 +155,8 @@ file.close();
     TGraphErrors *gr_t1 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_t1->SetPoint(i, x_values[i], means_t1[i]);
-        gr_t1->SetPointError(i, 0, errors_t1[i]);
+        //gr_t1->SetPointError(i, 0, errors_t1[i]);
+	   gr_t1->SetPointError(i, rit_errors[i], errors_t1[i]);
     }
     gr_t1->SetMarkerStyle(20);
     gr_t1->SetMarkerColor(kRed);
@@ -165,7 +166,7 @@ file.close();
     TF1 *linear_t1 = new TF1("linear_t1", "pol1", 0, x_values.size());
     linear_t1->SetLineColor(kRed);
     gr_t1->Fit(linear_t1, "Q");
-    gr_t1->SetStats(0);
+    //gr_t1->SetStats(0);
     gr_t1->Draw("AP");
     linear_t1->Draw("same");
 
@@ -173,16 +174,17 @@ file.close();
     TGraphErrors *gr_t2 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_t2->SetPoint(i, x_values[i], means_t2[i]);
-        gr_t2->SetPointError(i, 0, errors_t2[i]);
+        //gr_t2->SetPointError(i, 0, errors_t2[i]);
+	   gr_t2->SetPointError(i, rit_errors[i], errors_t2[i]);
     }
     gr_t2->SetMarkerStyle(21);
-    gr_t2->SetMarkerColor(kBlue);
-    gr_t2->SetLineColor(kBlue);
+    gr_t2->SetMarkerColor(kGreen);
+    gr_t2->SetLineColor(kGreen);
 
     TF1 *linear_t2 = new TF1("linear_t2", "pol1", 0, x_values.size());
-    linear_t2->SetLineColor(kBlue);
+    linear_t2->SetLineColor(kGreen);
     gr_t2->Fit(linear_t2, "Q");
-    gr_t2->SetStats(0);
+    //gr_t2->SetStats(0);
     gr_t2->Draw("P same");
     linear_t2->Draw("same");
 
@@ -190,16 +192,17 @@ file.close();
     TGraphErrors *gr_t3 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_t3->SetPoint(i, x_values[i], means_t3[i]);
-        gr_t3->SetPointError(i, 0, errors_t3[i]);
+        //gr_t3->SetPointError(i, 0, errors_t3[i]);
+	   gr_t3->SetPointError(i, rit_errors[i], errors_t3[i]);
     }
     gr_t3->SetMarkerStyle(22);
-    gr_t3->SetMarkerColor(kGreen);
-    gr_t3->SetLineColor(kGreen);
+    gr_t3->SetMarkerColor(kCyan);
+    gr_t3->SetLineColor(kCyan);
 
     TF1 *linear_t3 = new TF1("linear_t3", "pol1", 0, x_values.size());
-    linear_t3->SetLineColor(kGreen);
+    linear_t3->SetLineColor(kCyan);
     gr_t3->Fit(linear_t3, "Q");
-    gr_t3->SetStats(0);
+    //gr_t3->SetStats(0);
     gr_t3->Draw("P same");
     linear_t3->Draw("same");
 
@@ -207,16 +210,17 @@ file.close();
     TGraphErrors *gr_t4 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         gr_t4->SetPoint(i, x_values[i], means_t4[i]);
-        gr_t4->SetPointError(i, 0, errors_t4[i]);
+        //gr_t4->SetPointError(i, 0, errors_t4[i]);
+	   gr_t4->SetPointError(i, rit_errors[i], errors_t4[i]);
     }
     gr_t4->SetMarkerStyle(23);
-    gr_t4->SetMarkerColor(kMagenta);
-    gr_t4->SetLineColor(kMagenta);
+    gr_t4->SetMarkerColor(kViolet);
+    gr_t4->SetLineColor(kViolet);
 
     TF1 *linear_t4 = new TF1("linear_t4", "pol1", 0, x_values.size());
-    linear_t4->SetLineColor(kMagenta);
+    linear_t4->SetLineColor(kViolet);
     gr_t4->Fit(linear_t4, "Q");
-    gr_t4->SetStats(0);
+    //gr_t4->SetStats(0);
     gr_t4->Draw("P same");
     linear_t4->Draw("same");
 
