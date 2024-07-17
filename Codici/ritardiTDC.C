@@ -7,11 +7,7 @@ using namespace std;
 
 void ritardiTDC() {
      // Read the file
-<<<<<<< HEAD
-     ifstream file("Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
-=======
      ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
->>>>>>> 95fef543d65ceeb5cb0c4d84ca2566c214170f12
      if (!file.is_open()) {
          cout << "Cannot open file!" << endl;
 	    return;
@@ -49,8 +45,4 @@ void ritardiTDC() {
 	cout << "Total data is:" << rit_errors.size() << endl;
 	return;
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 95fef543d65ceeb5cb0c4d84ca2566c214170f12
