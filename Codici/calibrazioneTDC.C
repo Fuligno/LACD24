@@ -119,6 +119,32 @@ void calibrazioneTDC() {
 
     // Finalize text file
     textFile.close();
+    
+    // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
+    
+    ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
+    if (!file.is_open()) {
+        cout << "Cannot open file!" << endl;
+    return;
+    }
+    vector<double> rit_errors;	// vettore per contenere gli errori sui ritardi
+    string filename;
+    double rit05, rit1, rit2, rit4, rit8, rit16, rit32;	// errori sul ritardo introdotto da ciascuna levetta
+    getline(file, line); // Skip the header line
+    while (file.is_open()) {
+    
+    file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
+    if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
+    
+    double err_value = rit05+rit1+rit2+rit4+rit8+rit16+rit32;
+    rit_errors.push_back(err_value);
+   }
+     
+file.close();
+    // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
     // Crea una canvas
     TCanvas *c_calibr = new TCanvas("c_calibr", "Calibration Fits", 1200, 800);
