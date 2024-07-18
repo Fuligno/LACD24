@@ -84,6 +84,19 @@ void fitQDC_1234_landau() {
     legend->AddEntry(h_q4, "Channel 3", "l");
     legend->Draw();
 
+    h_q2->Draw("E");    // Draw error bars and histogram
+    h_q2->Draw("HIST same"); // Draw histogram lines on top
+
+    h_q1->Draw("E same");    // Draw error bars and histogram
+    h_q1->Draw("HIST same"); // Draw histogram lines on top
+
+    h_q3->Draw("E same");    // Draw error bars and histogram
+    h_q3->Draw("HIST same"); // Draw histogram lines on top
+
+    h_q4->Draw("E same");    // Draw error bars and histogram
+    h_q4->Draw("HIST same"); // Draw histogram lines on top
+
+
     c_all->Update();
     c_all->SaveAs("../Dati/QDC/QDC_1234/QDC_all.png");
 
@@ -177,6 +190,169 @@ void fitQDC_1234_landau() {
     outFile.Close();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// RESIDUI
+
+ vector<double> sigma_res1, sigma_res2, sigma_res3, sigma_res4;		// vettore che contiene gli errori sui residui
+    double sigma_res_value1, sigma_res_value2, sigma_res_value3, sigma_res_value4;
+    
+    // --- parte per calcolare gli errori sui residui ---
+    for (int i=0; i < h_q1->GetNbinsX(); i++) {
+	    sigma_res_value1 = TMath::Sqrt(h_q1->GetBinContent(i));
+        sigma_res1.push_back(sigma_res_value1);
+    }
+	for (int i=0; i < h_q2->GetNbinsX(); i++) {
+	    sigma_res_value2 = TMath::Sqrt(h_q2->GetBinContent(i));
+        sigma_res2.push_back(sigma_res_value2);
+    }
+    for (int i=0; i < h_q3->GetNbinsX(); i++) {
+	    sigma_res_value3 = TMath::Sqrt(h_q3->GetBinContent(i));
+        sigma_res3.push_back(sigma_res_value3);
+    }
+    for (int i=0; i < h_q4->GetNbinsX(); i++) {
+	    sigma_res_value4 = TMath::Sqrt(h_q4->GetBinContent(i));
+        sigma_res4.push_back(sigma_res_value4);
+    }
+    
+
+    TCanvas *c_residui = new TCanvas("c_residui", "Residui QDC", 1200, 800);
+    c_residui->Divide(2, 2);
+
+    // Residui per q1
+    c_residui->cd(1);
+    c_residui->cd(1)->SetGrid();
+    TGraphErrors *residui_q1 = new TGraphErrors(h_q1->GetNbinsX());
+    for (int i = 0; i < h_q1->GetNbinsX(); i++) {
+        double fit_value = landau_q1->Eval(h_q1->GetBinCenter(i));
+        double residual = (h_q1->GetBinContent(i) - fit_value);
+        residui_q1->SetPoint(i, h_q1->GetBinCenter(i), residual);
+        residui_q1->SetPointError(i, 0, sigma_res1[i]);
+    }
+    
+    TF1 *horiz1 = new TF1("horiz_q1", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
+    horiz1->SetLineColor(kRed);
+    residui_q1->SetTitle("Residui q1;Ritardi [ns];Residui");
+    residui_q1->SetMarkerStyle(1);
+    residui_q1->SetMarkerSize(.1);
+    residui_q1->SetMarkerColor(kRed);
+    residui_q1->Draw("AP");
+    residui_q1->Fit("horiz_q1");
+    horiz1->Draw("same");
+    
+    TPaveText *eqretta1 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
+    eqretta1->SetBorderSize(1);
+    eqretta1->SetFillColor(kWhite);
+    eqretta1->SetTextAlign(20);
+    eqretta1->SetTextSize(0.03);
+    double mr_q1 = horiz1->GetParameter(1);
+    double mr_q1_err = horiz1->GetParError(1);
+    double qr_q1 = horiz1->GetParameter(0);
+    double qr_q1_err = horiz1->GetParError(0);
+    eqretta1->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q1, mr_q1_err, qr_q1, qr_q1_err));
+    eqretta1->Draw("same");
+
+
+// Residui per q2
+    c_residui->cd(2);
+    c_residui->cd(2)->SetGrid();
+    TGraphErrors *residui_q2 = new TGraphErrors(h_q2->GetNbinsX());
+    for (int i = 0; i < h_q2->GetNbinsX(); i++) {
+        double fit_value = landau_q2->Eval(h_q2->GetBinCenter(i));
+        double residual = (h_q2->GetBinContent(i) - fit_value);
+        residui_q2->SetPoint(i, h_q2->GetBinCenter(i), residual);
+        residui_q2->SetPointError(i, 0, sigma_res2[i]);
+    }
+    
+    TF1 *horiz2 = new TF1("horiz_q2", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
+    horiz2->SetLineColor(kRed);
+    residui_q2->SetTitle("Residui q2;Ritardi [ns];Residui");
+    residui_q2->SetMarkerStyle(1);
+    residui_q2->SetMarkerSize(.1);
+    residui_q2->SetMarkerColor(kRed);
+    residui_q2->Draw("AP");
+    residui_q2->Fit("horiz_q2");
+    horiz2->Draw("same");
+    
+    TPaveText *eqretta2 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
+    eqretta2->SetBorderSize(1);
+    eqretta2->SetFillColor(kWhite);
+    eqretta2->SetTextAlign(20);
+    eqretta2->SetTextSize(0.03);
+    double mr_q2 = horiz2->GetParameter(1);
+    double mr_q2_err = horiz2->GetParError(1);
+    double qr_q2 = horiz2->GetParameter(0);
+    double qr_q2_err = horiz2->GetParError(0);
+    eqretta2->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q2, mr_q2_err, qr_q2, qr_q2_err));
+    eqretta2->Draw("same");
+
+    // Residui per q3
+    c_residui->cd(3);
+    c_residui->cd(3)->SetGrid();
+    TGraphErrors *residui_q3 = new TGraphErrors(h_q3->GetNbinsX());
+    for (int i = 0; i < h_q3->GetNbinsX(); i++) {
+        double fit_value = landau_q3->Eval(h_q3->GetBinCenter(i));
+        double residual = (h_q3->GetBinContent(i) - fit_value);
+        residui_q3->SetPoint(i, h_q3->GetBinCenter(i), residual);
+        residui_q3->SetPointError(i, 0, sigma_res3[i]);
+    }
+    
+    TF1 *horiz3 = new TF1("horiz_q3", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
+    horiz3->SetLineColor(kRed);
+    residui_q3->SetTitle("Residui q3;Ritardi [ns];Residui");
+    residui_q3->SetMarkerStyle(1);
+    residui_q3->SetMarkerSize(.1);
+    residui_q3->SetMarkerColor(kRed);
+    residui_q3->Draw("AP");
+    residui_q3->Fit("horiz_q3");
+    horiz3->Draw("same");
+    
+    TPaveText *eqretta3 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
+    eqretta3->SetBorderSize(1);
+    eqretta3->SetFillColor(kWhite);
+    eqretta3->SetTextAlign(20);
+    eqretta3->SetTextSize(0.03);
+    double mr_q3 = horiz3->GetParameter(1);
+    double mr_q3_err = horiz3->GetParError(1);
+    double qr_q3 = horiz3->GetParameter(0);
+    double qr_q3_err = horiz3->GetParError(0);
+    eqretta3->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q3, mr_q3_err, qr_q3, qr_q3_err));
+    eqretta3->Draw("same");
+
+    // Residui per q4
+    c_residui->cd(4);
+    c_residui->cd(4)->SetGrid();
+    TGraphErrors *residui_q4 = new TGraphErrors(h_q4->GetNbinsX());
+    for (int i = 0; i < h_q4->GetNbinsX(); i++) {
+        double fit_value = landau_q4->Eval(h_q4->GetBinCenter(i));
+        double residual = (h_q4->GetBinContent(i) - fit_value);
+        residui_q4->SetPoint(i, h_q4->GetBinCenter(i), residual);
+        residui_q4->SetPointError(i, 0, sigma_res4[i]);
+    }
+    
+    TF1 *horiz4 = new TF1("horiz_q4", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
+    horiz4->SetLineColor(kRed);
+    residui_q4->SetTitle("Residui q4;Ritardi [ns];Residui");
+    residui_q4->SetMarkerStyle(1);
+    residui_q4->SetMarkerSize(.1);
+    residui_q4->SetMarkerColor(kRed);
+    residui_q4->Draw("AP");
+    residui_q4->Fit("horiz_q4");
+    horiz4->Draw("same");
+    
+    TPaveText *eqretta4 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
+    eqretta4->SetBorderSize(1);
+    eqretta4->SetFillColor(kWhite);
+    eqretta4->SetTextAlign(20);
+    eqretta4->SetTextSize(0.03);
+    double mr_q4 = horiz4->GetParameter(1);
+    double mr_q4_err = horiz4->GetParError(1);
+    double qr_q4 = horiz4->GetParameter(0);
+    double qr_q4_err = horiz4->GetParError(0);
+    eqretta4->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q4, mr_q4_err, qr_q4, qr_q4_err));
+    eqretta4->Draw("same");
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ### Istogrammi dei residui ###
 TCanvas *c_histores = new TCanvas("c_histores", "Istogramma residui QDC", 1800, 1600);
