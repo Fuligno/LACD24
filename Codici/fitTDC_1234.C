@@ -63,9 +63,9 @@ void fitTDC_1234() {
     h_t4->SetLineWidth(1);
 
     // CANVAS PER TUTTI I CANALI 
-    TCanvas *c_all = new TCanvas("c_all", "TDC con trigger su segnali 1, 2, 3, 4", 1500, 1800);
+    TCanvas *c_all = new TCanvas("c_all", "TDC trigger S1-2-3-4", 1500, 1800);
     c_all->SetGrid();
-    h_t4->SetTitle("TDC con trigger su segnali 1, 2, 3, 4;TDC;#frac{dN}{d TDC}");
+    h_t4->SetTitle("TDC trigger S1-2-3-4;TDC;#frac{dN}{d TDC}");
 
     h_t4->Draw("E");    // Draw error bars and histogram
     h_t4->Draw("HIST same"); // Draw histogram lines on top
