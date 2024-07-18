@@ -483,14 +483,14 @@ void calibrazioneQDC() {
     double q_q4_high = linear_q4_high->GetParameter(0);
     double q_q4_err_high = linear_q4_high->GetParError(0);
 
-    statsBox->AddText(Form("q1_low: m = %.4f ± %.4f, q = %.5f ± %.4f", m_q1_low, m_q1_err_low, q_q1_low, q_q1_err_low));
-    statsBox->AddText(Form("q2_low: m = %.4f ± %.4f, q = %.5f ± %.4f", m_q2_low, m_q2_err_low, q_q2_low, q_q2_err_low));
-    statsBox->AddText(Form("q3_low: m = %.4f ± %.4f, q = %.5f ± %.4f", m_q3_low, m_q3_err_low, q_q3_low, q_q3_err_low));
-    statsBox->AddText(Form("q4_low: m = %.4f ± %.4f, q = %.5f ± %.4f", m_q4_low, m_q4_err_low, q_q4_low, q_q4_err_low));
-    statsBox->AddText(Form("q1_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q1_high, m_q1_err_high, q_q1_high, q_q1_err_high));
-    statsBox->AddText(Form("q2_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q2_high, m_q2_err_high, q_q2_high, q_q2_err_high));
-    statsBox->AddText(Form("q3_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q3_high, m_q3_err_high, q_q3_high, q_q3_err_high));
-    statsBox->AddText(Form("q4_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q4_high, m_q4_err_high, q_q4_high, q_q4_err_high));
+    statsBox->AddText(Form("q1_low: m = %.4f #pm %.4f, q = %.5f #pm %.4f", m_q1_low, m_q1_err_low, q_q1_low, q_q1_err_low));
+    statsBox->AddText(Form("q2_low: m = %.4f #pm %.4f, q = %.5f #pm %.4f", m_q2_low, m_q2_err_low, q_q2_low, q_q2_err_low));
+    statsBox->AddText(Form("q3_low: m = %.4f #pm %.4f, q = %.5f #pm %.4f", m_q3_low, m_q3_err_low, q_q3_low, q_q3_err_low));
+    statsBox->AddText(Form("q4_low: m = %.4f #pm %.4f, q = %.5f #pm %.4f", m_q4_low, m_q4_err_low, q_q4_low, q_q4_err_low));
+    statsBox->AddText(Form("q1_high: m = %.4f #pm %.4f, q = %.4f #pm %.4f", m_q1_high, m_q1_err_high, q_q1_high, q_q1_err_high));
+    statsBox->AddText(Form("q2_high: m = %.4f #pm %.4f, q = %.4f #pm %.4f", m_q2_high, m_q2_err_high, q_q2_high, q_q2_err_high));
+    statsBox->AddText(Form("q3_high: m = %.4f #pm %.4f, q = %.4f #pm %.4f", m_q3_high, m_q3_err_high, q_q3_high, q_q3_err_high));
+    statsBox->AddText(Form("q4_high: m = %.4f #pm %.4f, q = %.4f #pm %.4f", m_q4_high, m_q4_err_high, q_q4_high, q_q4_err_high));
 
     //statsBox->Draw();
     TLegend* leg = new TLegend(0.2,0.65,0.5,0.8);		// costruzione della legenda
@@ -562,7 +562,7 @@ void calibrazioneQDC() {
     double mr_q1_low_err = horiz_q1_low->GetParError(1);
     double qr_q1_low = horiz_q1_low->GetParameter(0);
     double qr_q1_low_err = horiz_q1_low->GetParError(0);
-    eqretta_q1_low->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q1_low, mr_q1_low_err, qr_q1_low, qr_q1_low_err));
+    eqretta_q1_low->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q1_low, mr_q1_low_err, qr_q1_low, qr_q1_low_err));
     eqretta_q1_low->Draw("same");
 
     // Secondo sottoplot: Residui per mean_q2_low
@@ -594,7 +594,7 @@ void calibrazioneQDC() {
     double mr_q2_low_err = horiz_q2_low->GetParError(1);
     double qr_q2_low = horiz_q2_low->GetParameter(0);
     double qr_q2_low_err = horiz_q2_low->GetParError(0);
-    eqretta_q2_low->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q2_low, mr_q2_low_err, qr_q2_low, qr_q2_low_err));
+    eqretta_q2_low->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q2_low, mr_q2_low_err, qr_q2_low, qr_q2_low_err));
     eqretta_q2_low->Draw("same");
     
     // Terzo sottoplot: Residui per mean_q3_low
@@ -626,7 +626,7 @@ void calibrazioneQDC() {
     double mr_q3_low_err = horiz_q3_low->GetParError(1);
     double qr_q3_low = horiz_q3_low->GetParameter(0);
     double qr_q3_low_err = horiz_q3_low->GetParError(0);
-    eqretta_q3_low->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q3_low, mr_q3_low_err, qr_q3_low, qr_q3_low_err));
+    eqretta_q3_low->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q3_low, mr_q3_low_err, qr_q3_low, qr_q3_low_err));
     eqretta_q3_low->Draw("same");
 
     // Quarto sottoplot: Residui per mean_q4_low
@@ -658,7 +658,7 @@ void calibrazioneQDC() {
     double mr_q4_low_err = horiz_q4_low->GetParError(1);
     double qr_q4_low = horiz_q4_low->GetParameter(0);
     double qr_q4_low_err = horiz_q4_low->GetParError(0);
-    eqretta_q4_low->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q4_low, mr_q4_low_err, qr_q4_low, qr_q4_low_err));
+    eqretta_q4_low->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q4_low, mr_q4_low_err, qr_q4_low, qr_q4_low_err));
     eqretta_q4_low->Draw("same");
 
     // Salva la canvas come file PNG
@@ -723,7 +723,7 @@ void calibrazioneQDC() {
     double mr_q1_high_err = horiz_q1_low->GetParError(1);
     double qr_q1_high = horiz_q1_low->GetParameter(0);
     double qr_q1_high_err = horiz_q1_low->GetParError(0);
-    eqretta_q1_high->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q1_high, mr_q1_high_err, qr_q1_high, qr_q1_high_err));
+    eqretta_q1_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q1_high, mr_q1_high_err, qr_q1_high, qr_q1_high_err));
     eqretta_q1_high->Draw("same");
 
     // Secondo sottoplot: Residui per mean_q2_high
@@ -760,7 +760,7 @@ TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a rett
     double mr_q2_high_err = horiz_q2_low->GetParError(1);
     double qr_q2_high = horiz_q2_low->GetParameter(0);
     double qr_q2_high_err = horiz_q2_low->GetParError(0);
-    eqretta_q2_high->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q2_high, mr_q2_high_err, qr_q2_high, qr_q2_high_err));
+    eqretta_q2_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q2_high, mr_q2_high_err, qr_q2_high, qr_q2_high_err));
     eqretta_q2_high->Draw("same");
 
     // Terzo sottoplot: Residui per mean_q3_high
@@ -797,7 +797,7 @@ TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a rett
     double mr_q3_high_err = horiz_q3_low->GetParError(1);
     double qr_q3_high = horiz_q3_low->GetParameter(0);
     double qr_q3_high_err = horiz_q3_low->GetParError(0);
-    eqretta_q3_high->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q3_high, mr_q3_high_err, qr_q3_high, qr_q3_high_err));
+    eqretta_q3_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q3_high, mr_q3_high_err, qr_q3_high, qr_q3_high_err));
     eqretta_q3_high->Draw("same");
 
     // Quarto sottoplot: Residui per mean_q4_high
@@ -834,7 +834,7 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     double mr_q4_high_err = horiz_q4_low->GetParError(1);
     double qr_q4_high = horiz_q4_low->GetParameter(0);
     double qr_q4_high_err = horiz_q4_low->GetParError(0);
-    eqretta_q4_high->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q4_high, mr_q4_high_err, qr_q4_high, qr_q4_high_err));
+    eqretta_q4_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q4_high, mr_q4_high_err, qr_q4_high, qr_q4_high_err));
     eqretta_q4_high->Draw("same");
 
     // Salva la canvas come file PNG
