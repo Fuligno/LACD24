@@ -172,7 +172,8 @@ void calibrazioneQDC() {
     }
 
     vector<double> att_errors1, att_errors2, att_errors3, att_errors4;
-    double A, q0, sigma_q0;
+    double A, q0, sigma_q0, var_A, sigma_A;
+    double att05, att1, att2, att3, att6, att12, att20;
 
     // Read the file line by line and calculate errors
     getline(file, line); // Skip the header
@@ -180,11 +181,12 @@ void calibrazioneQDC() {
     // Channel 1
     q0 = 21.593 / 50;
     sigma_q0 = 0.088 / 50;
-    while (file >> A) {
-        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
-            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+    while (file >> A >> att05 >> att1 >> att2 >> att3 >> att6 >> att12 >> att20) {
+        var_A = pow(q0,2.0)*(pow(att05,2.0)+pow(att1,2.0)+pow(att2,2.0)+pow(att3,2.0)+pow(att6,2.0)+pow(att12,2.0)+pow(att20,2.0)) * pow(log(10.0)/20,2.0);
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0,2.0) +  var_A));
         att_errors1.push_back(err_value);
-        cout << "err_value (channel 1): " << err_value << endl;
+        sigma_A = sqrt(var_A);
+        cout << "sigma_q0 (ch1): " << sigma_q0 << "sigma_A (ch1)" << sigma_A << endl;
     }
 
     // Reset file stream to read again
@@ -193,13 +195,14 @@ void calibrazioneQDC() {
     getline(file, line); // Skip the header again
 
     // Channel 2
-    q0 = 21.223;
+    q0 = 21.223 / 50;
     sigma_q0 = 0.088 / 50;
-    while (file >> A) {
-        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
-            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+   while (file >> A >> att05 >> att1 >> att2 >> att3 >> att6 >> att12 >> att20) {
+            var_A = pow(q0,2.0)*(pow(att05,2.0)+pow(att1,2.0)+pow(att2,2.0)+pow(att3,2.0)+pow(att6,2.0)+pow(att12,2.0)+pow(att20,2.0)) * pow(log(10.0)/20,2.0);
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0,2.0) +  var_A));
         att_errors2.push_back(err_value);
-        cout << "err_value (channel 2): " << err_value << endl;
+        sigma_A = sqrt(var_A);
+        cout << "sigma_q0 (ch2): " << sigma_q0 << "sigma_A (ch2)" << sigma_A << endl;
     }
 
     // Reset file stream to read again
@@ -208,13 +211,14 @@ void calibrazioneQDC() {
     getline(file, line); // Skip the header again
 
     // Channel 3
-    q0 = 20.894;
+    q0 = 20.894 / 50;
     sigma_q0 = 0.086 / 50;
-    while (file >> A) {
-        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
-            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+   while (file >> A >> att05 >> att1 >> att2 >> att3 >> att6 >> att12 >> att20) {
+            var_A = pow(q0,2.0)*(pow(att05,2.0)+pow(att1,2.0)+pow(att2,2.0)+pow(att3,2.0)+pow(att6,2.0)+pow(att12,2.0)+pow(att20,2.0)) * pow(log(10.0)/20,2.0);
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0,2.0) +  var_A));
         att_errors3.push_back(err_value);
-        cout << "err_value (channel 3): " << err_value << endl;
+        sigma_A = sqrt(var_A);
+        cout << "sigma_q0 (ch3): " << sigma_q0 << "sigma_A (ch3)" << sigma_A << endl;
     }
 
     // Reset file stream to read again
@@ -223,13 +227,14 @@ void calibrazioneQDC() {
     getline(file, line); // Skip the header again
 
     // Channel 4
-    q0 = 21.924;
+    q0 = 21.924 / 50;
     sigma_q0 = 0.087 / 50;
-    while (file >> A) {
-        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0, 2.0)
-            + pow(q0, 2.0) * pow(0.01 * A, 2.0) * pow((log(10.0) / 20.0), 2.0)));
+    while (file >> A >> att05 >> att1 >> att2 >> att3 >> att6 >> att12 >> att20) {
+            var_A = pow(q0,2.0)*(pow(att05,2.0)+pow(att1,2.0)+pow(att2,2.0)+pow(att3,2.0)+pow(att6,2.0)+pow(att12,2.0)+pow(att20,2.0)) * pow(log(10.0)/20,2.0);
+        double err_value = sqrt(pow(10, -A / 10.0) * (pow(sigma_q0,2.0) +  var_A));
         att_errors4.push_back(err_value);
-        cout << "err_value (channel 4): " << err_value << endl;
+        sigma_A = sqrt(var_A);
+        cout << "sigma_q0 (ch4): " << sigma_q0 << "sigma_A (ch4)" << sigma_A << endl;
     }
 
     file.close();
