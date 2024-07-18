@@ -10,13 +10,6 @@
 
 using namespace std;
 
-// Definizione della funzione landau + gauss
-double fitf_sum(double* x, double* p) {
-    double norm1 = p[0], norm2 = p[1], MPV = p[2], mu = p[3], sigmaL = p[4], sigmaG = p[5];
-    double argG = (x[0] - mu) / sigmaG;
-    return norm1 * TMath::Landau(x[0], MPV, sigmaL) + norm2 * TMath::Exp(-0.5 * argG * argG);
-}
-
 void fitQDC_1234_landau() {
 
     // Prende i dati dal tree
@@ -98,10 +91,10 @@ void fitQDC_1234_landau() {
     
     gStyle->SetOptFit(1111);
     gStyle->SetOptStat(1111);
-    h_q1->SetStats(1); 
-    h_q2->SetStats(1); 
-    h_q3->SetStats(1); 
-    h_q4->SetStats(1); 
+    h_q1->SetStats(false); 
+    h_q2->SetStats(false); 
+    h_q3->SetStats(false); 
+    h_q4->SetStats(false); 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
    // Definisce Landau per fit
@@ -136,6 +129,7 @@ void fitQDC_1234_landau() {
     TCanvas *c1_landau = new TCanvas("c1_landau", "QDC Channel 0 Landau", 1500, 1200);
     h_q1->SetTitle("QDC Channel 0 Landau;QDC;conteggi");
     h_q1->Draw("HIST");
+    h_q1->SetStats(true);
     landau_q1->Draw("same");
     c1_landau->SetGrid();
     c1_landau->Update();
@@ -144,6 +138,7 @@ void fitQDC_1234_landau() {
     TCanvas *c2_landau = new TCanvas("c2_landau", "QDC Channel 1 Landau", 1500, 1200);
     h_q2->SetTitle("QDC Channel 1 Landau;QDC;conteggi");
     h_q2->Draw("HIST");
+    h_q2->SetStats(true);
     landau_q2->Draw("same");
     c2_landau->SetGrid();
     c2_landau->Update();
@@ -152,6 +147,7 @@ void fitQDC_1234_landau() {
     TCanvas *c3_landau = new TCanvas("c3_landau", "QDC Channel 2 Landau", 1500, 1200);
     h_q3->SetTitle("QDC Channel 2 Landau;QDC;conteggi");
     h_q3->Draw("HIST");
+    h_q2->SetStats(true);
     landau_q3->Draw("same");
     c3_landau->SetGrid();
     c3_landau->Update();
@@ -160,77 +156,11 @@ void fitQDC_1234_landau() {
     TCanvas *c4_landau = new TCanvas("c4_landau", "QDC Channel 3 Landau", 1500, 1200);
     h_q4->SetTitle("QDC Channel 3 Landau;QDC;conteggi");
     h_q4->Draw("HIST");
+    h_q4->SetStats(true);
     landau_q4->Draw("same");
     c4_landau->SetGrid();
     c4_landau->Update();
     c4_landau->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel3_Landau.png");
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Definisce Landau + Gauss per fit
-    h_q1->SetStats(1); 
-    h_q2->SetStats(1); 
-    h_q3->SetStats(1); 
-    h_q4->SetStats(1); 
-    TF1 *landau_gauss_q1 = new TF1("landau_gauss_q1", fitf_sum, xmin, xmax, 6);
-    TF1 *landau_gauss_q2 = new TF1("landau_gauss_q2", fitf_sum, xmin, xmax, 6);
-    TF1 *landau_gauss_q3 = new TF1("landau_gauss_q3", fitf_sum, xmin, xmax, 6);
-    TF1 *landau_gauss_q4 = new TF1("landau_gauss_q4", fitf_sum, xmin, xmax, 6);
-
-    // Parametri iniziali
-    norm1  = 4000.,  norm2  = 1000.; 
-    MPV    = 1000.,  mu     = 800.; 
-    sigmaL = 50.;    sigmaG = 50.;
-
-    landau_gauss_q1->SetParameters(norm1, norm2, MPV, mu, sigmaL, sigmaG);
-    landau_gauss_q2->SetParameters(norm1, norm2, MPV, mu, sigmaL, sigmaG);
-    landau_gauss_q3->SetParameters(norm1, norm2, MPV, mu, sigmaL, sigmaG);
-    landau_gauss_q4->SetParameters(norm1, norm2, MPV, mu, sigmaL, sigmaG);
-
-    // Fit line color
-    landau_gauss_q1->SetLineColor(kBlue);
-    landau_gauss_q2->SetLineColor(kBlue);
-    landau_gauss_q3->SetLineColor(kBlue);
-    landau_gauss_q4->SetLineColor(kBlue);
-
-    h_q1->Fit("landau_gauss_q1");
-    h_q2->Fit("landau_gauss_q2");
-    h_q3->Fit("landau_gauss_q3");
-    h_q4->Fit("landau_gauss_q4");
-    
-    // Disegna istogrammi + fit
-    TCanvas *c1_gauss = new TCanvas("c1_gauss", "QDC Channel 0 Landau+Gauss", 1500, 1200);
-    h_q1->SetTitle("QDC Channel 0 Landau+Gauss;QDC;conteggi");
-    h_q1->Draw("HIST");
-    landau_gauss_q1->Draw("same");
-    c1_gauss->SetGrid();
-    c1_gauss->Update();
-    c1_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel0_Gauss.png");
-
-    TCanvas *c2_gauss = new TCanvas("c2_gauss", "QDC Channel 1 Landau+Gauss", 1500, 1200);
-    h_q2->SetTitle("QDC Channel 1 Landau+Gauss;QDC;conteggi");
-    h_q2->Draw("HIST");
-    landau_gauss_q2->Draw("same");
-    c2_gauss->SetGrid();
-    c2_gauss->Update();
-    c2_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel1_Gauss.png");
-
-    TCanvas *c3_gauss = new TCanvas("c3_gauss", "QDC Channel 2 Landau+Gauss", 1500, 1200);
-    h_q3->SetTitle("QDC Channel 2 Landau+Gauss;QDC;conteggi");
-    h_q3->Draw("HIST");
-    landau_gauss_q3->Draw("same");
-    c3_gauss->SetGrid();
-    c3_gauss->Update();
-    c3_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel2_Gauss.png");
-
-    TCanvas *c4_gauss = new TCanvas("c4_gauss", "QDC Channel 3 Landau+Gauss", 1500, 1200);
-    h_q4->SetTitle("QDC Channel 3 Landau+Gauss;QDC;conteggi");
-    h_q4->Draw("HIST");
-    landau_gauss_q4->Draw("same");
-    c4_gauss->SetGrid();
-    c4_gauss->Update();
-    c4_gauss->SaveAs("../Dati/QDC/QDC_1234/QDC_Channel3_Gauss.png");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -243,11 +173,6 @@ void fitQDC_1234_landau() {
     c2_landau->Write();
     c3_landau->Write();
     c4_landau->Write();
-
-    c1_gauss->Write();
-    c2_gauss->Write();
-    c3_gauss->Write();
-    c4_gauss->Write();
 
     outFile.Close();
 
@@ -273,22 +198,6 @@ h1->Draw("E1");
 h1->Draw("bar same");
 gStyle->SetOptFit(1111);
 
-// Istogramma dei residui per il secondo fit (q1 con Gauss)
-c_histores->cd(2);
-TH1F* h2 = new TH1F("h2", "Istogramma residui Channel0_Landau_Gauss", 50, -10.0, 10.0);
-for (int i = 1; i <= h_q1->GetNbinsX(); ++i) {
-    float resid = (h_q1->GetBinContent(i) - landau_gauss_q1->Eval(h_q1->GetBinCenter(i))) / TMath::Sqrt(h_q1->GetBinContent(i));
-    h2->Fill(resid);
-}
-h2->SetFillColorAlpha(kRed, 1.0);
-h2->SetFillStyle(3002);
-TF1* gauss2 = new TF1("gauss2", "gaus", -10.0, 10.0);
-gauss2->SetParameters(3.0, 0.0, 1.0);
-h2->Fit(gauss2);
-h2->Draw("E1");
-h2->Draw("bar same");
-gStyle->SetOptFit(1111);
-
 // Istogramma dei residui per il terzo fit (q2)
 c_histores->cd(3);
 TH1F* h3 = new TH1F("h3", "Istogramma residui Channel1_Landau", 50, -10.0, 10.0);
@@ -303,22 +212,6 @@ gauss3->SetParameters(3.0, 0.0, 1.0);
 h3->Fit(gauss3);
 h3->Draw("E1");
 h3->Draw("bar same");
-gStyle->SetOptFit(1111);
-
-// Istogramma dei residui per il quarto fit (q2 con Gauss)
-c_histores->cd(4);
-TH1F* h4 = new TH1F("h4", "Istogramma residui Channel1_Landau_Gauss", 50, -10.0, 10.0);
-for (int i = 1; i <= h_q2->GetNbinsX(); ++i) {
-    float resid = (h_q2->GetBinContent(i) - landau_gauss_q2->Eval(h_q2->GetBinCenter(i))) / TMath::Sqrt(h_q2->GetBinContent(i));
-    h4->Fill(resid);
-}
-h4->SetFillColorAlpha(kRed, 1.0);
-h4->SetFillStyle(3002);
-TF1* gauss4 = new TF1("gauss4", "gaus", -10.0, 10.0);
-gauss4->SetParameters(3.0, 0.0, 1.0);
-h4->Fit(gauss4);
-h4->Draw("E1");
-h4->Draw("bar same");
 gStyle->SetOptFit(1111);
 
 // Istogramma dei residui per il quinto fit (q3)
@@ -337,22 +230,6 @@ h5->Draw("E1");
 h5->Draw("bar same");
 gStyle->SetOptFit(1111);
 
-// Istogramma dei residui per il sesto fit (q3 con Gauss)
-c_histores->cd(6);
-TH1F* h6 = new TH1F("h6", "Istogramma residui Channel2_Landau_Gauss", 50, -10.0, 10.0);
-for (int i = 1; i <= h_q3->GetNbinsX(); ++i) {
-    float resid = (h_q3->GetBinContent(i) - landau_gauss_q3->Eval(h_q3->GetBinCenter(i))) / TMath::Sqrt(h_q3->GetBinContent(i));
-    h6->Fill(resid);
-}
-h6->SetFillColorAlpha(kRed, 1.0);
-h6->SetFillStyle(3002);
-TF1* gauss6 = new TF1("gauss6", "gaus", -10.0, 10.0);
-gauss6->SetParameters(3.0, 0.0, 1.0);
-h6->Fit(gauss6);
-h6->Draw("E1");
-h6->Draw("bar same");
-gStyle->SetOptFit(1111);
-
 // Istogramma dei residui per il settimo fit (q4)
 c_histores->cd(7);
 TH1F* h7 = new TH1F("h7", "Istogramma residui Channel3_Landau", 50, -10.0, 10.0);
@@ -367,22 +244,6 @@ gauss7->SetParameters(3.0, 0.0, 1.0);
 h7->Fit(gauss7);
 h7->Draw("E1");
 h7->Draw("bar same");
-gStyle->SetOptFit(1111);
-
-// Istogramma dei residui per l'ottavo fit (q4 con Gauss)
-c_histores->cd(8);
-TH1F* h8 = new TH1F("h8", "Istogramma residui Channel3_Landau_Gauss", 50, -10.0, 10.0);
-for (int i = 1; i <= h_q4->GetNbinsX(); ++i) {
-    float resid = (h_q4->GetBinContent(i) - landau_gauss_q4->Eval(h_q4->GetBinCenter(i))) / TMath::Sqrt(h_q4->GetBinContent(i));
-    h8->Fill(resid);
-}
-h8->SetFillColorAlpha(kRed, 1.0);
-h8->SetFillStyle(3002);
-TF1* gauss8 = new TF1("gauss8", "gaus", -10.0, 10.0);
-gauss8->SetParameters(3.0, 0.0, 1.0);
-h8->Fit(gauss8);
-h8->Draw("E1");
-h8->Draw("bar same");
 gStyle->SetOptFit(1111);
 
 // Salva la canvas come file pdf
