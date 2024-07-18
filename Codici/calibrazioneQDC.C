@@ -35,6 +35,7 @@ void calibrazioneQDC() {
     vector<double> means_q3_high, errors_q3_high;
     vector<double> means_q4_high, errors_q4_high;
     vector<double> x_values, x1, x2, x3, x4;
+    vector<double> x1_high, x2_high, x3_high, x4_high;	// vettori per contenere valori attenuazione solo per alta risoluzione
 
     string line;
     while (getline(inputFile, line)) {
@@ -163,7 +164,7 @@ void calibrazioneQDC() {
     textFileHigh.close();
     textFileLow.close();
 
-    // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
+    // ############# CALCOLO DEGLI ERRORI SULLE ATTENUAZIONI #############
     
    ifstream file("../Dati/QDC/Attenuazioni_calibrazione_QDC.txt");
     if (!file.is_open()) {
@@ -266,16 +267,19 @@ void calibrazioneQDC() {
         gr_q1_low->SetPointError(i, att_errors1[i], errors_q1_low[i]);
     }
     gr_q1_low->SetMarkerStyle(20);
-    gr_q1_low->SetMarkerColor(kRed);
-    gr_q1_low->SetLineColor(kRed);
-    gr_q1_low->SetTitle("Calibrazione QDC;Carica [nC];Conteggi");
+    gr_q1_low->SetMarkerColor(kPink+10);
+    gr_q1_low->SetLineColor(kPink+10);
+    gr_q1_low->SetTitle("Calibrazione QDC;Carica [nC];QDC");
     gr_q1_low->SetMinimum(0);
     gr_q1_low->SetMaximum(4500);
 
-    TF1 *linear_q1_low = new TF1("linear_q1_low", "pol1", 0, x_values.size());
-    linear_q1_low->SetLineColor(kRed);
+    TF1 *linear_q1_low = new TF1("linear_q1_low", "pol1", 0, 0.4);
+    linear_q1_low->SetLineColor(kPink+10);
+    linear_q1_low->SetLineWidth(1);
     gr_q1_low->Fit(linear_q1_low, "Q");
-    gr_q1_low->SetStats(0);
+    //gr_q1_low->SetStats(false);
+    gStyle->SetOptFit(false);
+    gStyle->SetOptStat(false);
     gr_q1_low->Draw("AP");
     linear_q1_low->Draw("same");
 
@@ -285,14 +289,15 @@ void calibrazioneQDC() {
         gr_q2_low->SetPoint(i, x2[i], means_q2_low[i]);
         gr_q2_low->SetPointError(i, att_errors2[i], errors_q2_low[i]);
     }
-    gr_q2_low->SetMarkerStyle(21);
-    gr_q2_low->SetMarkerColor(kBlue);
-    gr_q2_low->SetLineColor(kBlue);
+    gr_q2_low->SetMarkerStyle(20);
+    gr_q2_low->SetMarkerColor(kAzure+1);
+    gr_q2_low->SetLineColor(kAzure+1);
 
-    TF1 *linear_q2_low = new TF1("linear_q2_low", "pol1", 0, x_values.size());
-    linear_q2_low->SetLineColor(kBlue);
+    TF1 *linear_q2_low = new TF1("linear_q2_low", "pol1", 0, 0.4);
+    linear_q2_low->SetLineColor(kAzure+1);
+    linear_q2_low->SetLineWidth(1);
     gr_q2_low->Fit(linear_q2_low, "Q");
-    gr_q2_low->SetStats(0);
+    //gr_q2_low->SetStats(false);
     gr_q2_low->Draw("P same");
     linear_q2_low->Draw("same");
 
@@ -302,14 +307,15 @@ void calibrazioneQDC() {
         gr_q3_low->SetPoint(i, x3[i], means_q3_low[i]);
         gr_q3_low->SetPointError(i, att_errors3[i], errors_q3_low[i]);
     }
-    gr_q3_low->SetMarkerStyle(22);
-    gr_q3_low->SetMarkerColor(kGreen);
-    gr_q3_low->SetLineColor(kGreen);
+    gr_q3_low->SetMarkerStyle(20);
+    gr_q3_low->SetMarkerColor(kTeal);
+    gr_q3_low->SetLineColor(kTeal);
 
-    TF1 *linear_q3_low = new TF1("linear_q3v", "pol1", 0, x_values.size());
-    linear_q3_low->SetLineColor(kGreen);
+    TF1 *linear_q3_low = new TF1("linear_q3v", "pol1", 0, 0.4);
+    linear_q3_low->SetLineColor(kTeal);
+    linear_q3_low->SetLineWidth(1);
     gr_q3_low->Fit(linear_q3_low, "Q");
-    gr_q3_low->SetStats(0);
+    //gr_q3_low->SetStats(false);
     gr_q3_low->Draw("P same");
     linear_q3_low->Draw("same");
 
@@ -319,99 +325,112 @@ void calibrazioneQDC() {
         gr_q4_low->SetPoint(i, x4[i], means_q4_low[i]);
         gr_q4_low->SetPointError(i, att_errors4[i], errors_q4_low[i]);
     }
-    gr_q4_low->SetMarkerStyle(23);
-    gr_q4_low->SetMarkerColor(kMagenta);
-    gr_q4_low->SetLineColor(kMagenta);
+    gr_q4_low->SetMarkerStyle(20);
+    gr_q4_low->SetMarkerColor(kOrange-3);
+    gr_q4_low->SetLineColor(kOrange-3);
 
-    TF1 *linear_q4_low = new TF1("linear_q4_low", "pol1", 0, x_values.size());
-    linear_q4_low->SetLineColor(kMagenta);
+    TF1 *linear_q4_low = new TF1("linear_q4_low", "pol1", 0, 0.4);
+    linear_q4_low->SetLineColor(kOrange-3);
+    linear_q4_low->SetLineWidth(1);
     gr_q4_low->Fit(linear_q4_low, "Q");
-    gr_q4_low->SetStats(0);
+    //gr_q4_low->SetStats(false);
     gr_q4_low->Draw("P same");
     linear_q4_low->Draw("same");
 
     /////////////////////////////////////////////////////////////// HIGH
     // Scatter plot e fit per mean_q1
-    TGraphErrors *gr_q1_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_q1_high = new TGraphErrors(x1_high.size());
     int k = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q1_high[i]<=3840) {
+		  float x1_h = x1[i];
             gr_q1_high->SetPoint(k, x1[i], means_q1_high[i]);
             gr_q1_high->SetPointError(k, att_errors1[i], errors_q1_high[i]);
             k++;
+		  x1_high.push_back(x1_h);
         }
     }
-    gr_q1_high->SetMarkerStyle(20);
-    gr_q1_high->SetMarkerColor(kRed);
-    gr_q1_high->SetLineColor(kRed);
+    gr_q1_high->SetMarkerStyle(21);
+    gr_q1_high->SetMarkerColor(kPink+10);
+    gr_q1_high->SetLineColor(kPink+10);
 
-    TF1 *linear_q1_high = new TF1("linear_q1_high", "pol1", 0, x_values.size());
-    linear_q1_high->SetLineColor(kRed);
+    TF1 *linear_q1_high = new TF1("linear_q1_high", "pol1", 0, 0.4);
+    linear_q1_high->SetLineColor(kPink+10);
+    linear_q1_high->SetLineWidth(1);
     gr_q1_high->Fit(linear_q1_high, "Q");
-    gr_q1_high->SetStats(0);
+    //gr_q1_high->SetStats(false);
     gr_q1_high->Draw("P same");
     linear_q1_high->Draw("same");
 
     // Scatter plot e fit per mean_q2
-    TGraphErrors *gr_q2_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_q2_high = new TGraphErrors(x2_high.size());
     k = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q2_high[i]<=3840) {
+		  float x2_h = x2[i];
             gr_q2_high->SetPoint(k, x2[i], means_q2_high[i]);
             gr_q2_high->SetPointError(k, att_errors2[i], errors_q2_high[i]);
             k++;
+		  x2_high.push_back(x2_h);
         }
     }
     gr_q2_high->SetMarkerStyle(21);
-    gr_q2_high->SetMarkerColor(kBlue);
-    gr_q2_high->SetLineColor(kBlue);
+    gr_q2_high->SetMarkerColor(kAzure+1);
+    gr_q2_high->SetLineColor(kAzure+1);
 
-    TF1 *linear_q2_high = new TF1("linear_q2_high", "pol1", 0, x_values.size());
-    linear_q2_high->SetLineColor(kBlue);
+    TF1 *linear_q2_high = new TF1("linear_q2_high", "pol1", 0, 0.4);
+    linear_q2_high->SetLineColor(kAzure+1);
+    linear_q2_high->SetLineWidth(1);
     gr_q2_high->Fit(linear_q2_high, "Q");
-    gr_q2_high->SetStats(0);
+    //gr_q2_high->SetStats(false);
     gr_q2_high->Draw("P same");
     linear_q2_high->Draw("same");
 
     // Scatter plot e fit per mean_q3
-    TGraphErrors *gr_q3_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_q3_high = new TGraphErrors(x3_high.size());
     k = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q3_high[i]<=3840) {
+		  float x3_h = x3[i];
             gr_q3_high->SetPoint(k, x3[i], means_q3_high[i]);
             gr_q3_high->SetPointError(k, att_errors3[i], errors_q3_high[i]);
             k++;
+		  x3_high.push_back(x3_h);
         }
     }
-    gr_q3_high->SetMarkerStyle(22);
-    gr_q3_high->SetMarkerColor(kGreen);
-    gr_q3_high->SetLineColor(kGreen);
+    gr_q3_high->SetMarkerStyle(21);
+    gr_q3_high->SetMarkerColor(kTeal);
+    gr_q3_high->SetLineColor(kTeal);
 
-    TF1 *linear_q3_high = new TF1("linear_q3v", "pol1", 0, x_values.size());
-    linear_q3_high->SetLineColor(kGreen);
+    TF1 *linear_q3_high = new TF1("linear_q3v", "pol1", 0, 0.4);
+    linear_q3_high->SetLineColor(kTeal);
+    linear_q3_high->SetLineWidth(1);
     gr_q3_high->Fit(linear_q3_high, "Q");
-    gr_q3_high->SetStats(0);
+    //gr_q3_high->SetStats(false);
     gr_q3_high->Draw("P same");
     linear_q3_high->Draw("same");
 
     // Scatter plot e fit per mean_q4
-    TGraphErrors *gr_q4_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_q4_high = new TGraphErrors(x4_high.size());
     k = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q4_high[i]<=3840) {
+		  float x4_h = x4[i];
             gr_q4_high->SetPoint(k, x4[i], means_q4_high[i]);
             gr_q4_high->SetPointError(k, att_errors4[i], errors_q4_high[i]);
             k++;
+		  x4_high.push_back(x4_h);
         }
     }
-    gr_q4_high->SetMarkerStyle(23);
-    gr_q4_high->SetMarkerColor(kMagenta);
-    gr_q4_high->SetLineColor(kMagenta);
+    gr_q4_high->SetMarkerStyle(21);
+    gr_q4_high->SetMarkerColor(kOrange-3);
+    gr_q4_high->SetLineColor(kOrange-3);
 
-    TF1 *linear_q4_high = new TF1("linear_q4_high", "pol1", 0, x_values.size());
-    linear_q4_high->SetLineColor(kMagenta);
+    TF1 *linear_q4_high = new TF1("linear_q4_high", "pol1", 0, 0.4);
+    linear_q4_high->SetLineColor(kOrange-3);
+    linear_q4_high->SetLineWidth(1);
     gr_q4_high->Fit(linear_q4_high, "Q");
-    gr_q4_high->SetStats(0);
+    //gr_q4_high->SetStats(false);
     gr_q4_high->Draw("P same");
     linear_q4_high->Draw("same");
 
@@ -473,7 +492,17 @@ void calibrazioneQDC() {
     statsBox->AddText(Form("q3_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q3_high, m_q3_err_high, q_q3_high, q_q3_err_high));
     statsBox->AddText(Form("q4_high: m = %.4f ± %.4f, q = %.4f ± %.4f", m_q4_high, m_q4_err_high, q_q4_high, q_q4_err_high));
 
-    statsBox->Draw();
+    //statsBox->Draw();
+    TLegend* leg = new TLegend(0.2,0.65,0.5,0.8);		// costruzione della legenda
+    leg->AddEntry(gr_q1_low, "Bassa risoluzione S1");
+    leg->AddEntry(gr_q2_low, "Bassa risoluzione S2");
+    leg->AddEntry(gr_q3_low, "Bassa risoluzione S3");
+    leg->AddEntry(gr_q4_low, "Bassa risoluzione S4");
+    leg->AddEntry(gr_q1_high, "Alta risoluzione S1");
+    leg->AddEntry(gr_q2_high, "Alta risoluzione S2");
+    leg->AddEntry(gr_q3_high, "Alta risoluzione S3");
+    leg->AddEntry(gr_q4_high, "Alta risoluzione S4");
+    leg->Draw();
 
     // Salva la canvas come file PNG
     c_calibr->Update();
@@ -517,11 +546,12 @@ void calibrazioneQDC() {
     
     TF1 *horiz_q1_low = new TF1("horiz_q1_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q1_low->SetMarkerStyle(20);
-    gr_residuals_q1_low->SetMarkerColor(kRed);
+    gr_residuals_q1_low->SetMarkerColor(kPink+10);
     gr_residuals_q1_low->SetTitle("Residui q1 (Low Resolution);Carica [nC];Residui");
     gr_residuals_q1_low->Draw("AP");
     gr_residuals_q1_low->Fit("horiz_q1_low");
     horiz_q1_low->Draw("same");
+    horiz_q1_low->SetLineColor(kPink+10);
 
     TPaveText *eqretta_q1_low = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q1_low->SetBorderSize(1);
@@ -548,11 +578,12 @@ void calibrazioneQDC() {
 
     TF1 *horiz_q2_low = new TF1("horiz_q2_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q2_low->SetMarkerStyle(20);
-    gr_residuals_q2_low->SetMarkerColor(kRed);
+    gr_residuals_q2_low->SetMarkerColor(kAzure+1);
     gr_residuals_q2_low->SetTitle("Residui q2 (Low Resolution);Carica [nC];Residui");
     gr_residuals_q2_low->Draw("AP");
     gr_residuals_q2_low->Fit("horiz_q2_low");
     horiz_q2_low->Draw("same");
+    horiz_q2_low->SetLineColor(kAzure+1);
 
     TPaveText *eqretta_q2_low = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q2_low->SetBorderSize(1);
@@ -579,11 +610,12 @@ void calibrazioneQDC() {
     
     TF1 *horiz_q3_low = new TF1("horiz_q3_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q3_low->SetMarkerStyle(20);
-    gr_residuals_q3_low->SetMarkerColor(kRed);
+    gr_residuals_q3_low->SetMarkerColor(kTeal);
     gr_residuals_q3_low->SetTitle("Residui q3 (Low Resolution);Carica [nC];Residui");
     gr_residuals_q3_low->Draw("AP");
     gr_residuals_q3_low->Fit("horiz_q3_low");
     horiz_q3_low->Draw("same");
+    horiz_q3_low->SetLineColor(kTeal);
 
     TPaveText *eqretta_q3_low = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q3_low->SetBorderSize(1);
@@ -610,11 +642,12 @@ void calibrazioneQDC() {
     
     TF1 *horiz_q4_low = new TF1("horiz_q4_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q4_low->SetMarkerStyle(20);
-    gr_residuals_q4_low->SetMarkerColor(kRed);
+    gr_residuals_q4_low->SetMarkerColor(kOrange-3);
     gr_residuals_q4_low->SetTitle("Residui q4 (Low Resolution);Carica [nC];Residui");
     gr_residuals_q4_low->Draw("AP");
     gr_residuals_q4_low->Fit("horiz_q4_low");
     horiz_q4_low->Draw("same");
+    horiz_q4_low->SetLineColor(kOrange-3);
 
     TPaveText *eqretta_q4_low = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q4_low->SetBorderSize(1);
@@ -655,17 +688,18 @@ void calibrazioneQDC() {
     // Crea una canvas per i residui high
     TCanvas *c_residuals_high = new TCanvas("c_residuals_high", "Residuals for High Resolution", 1200, 800);
     c_residuals_high->Divide(2, 2); // Divide in 4 sottoplot (2x2)
-
+    
     // Primo sottoplot: Residui per mean_q1_high
     c_residuals_high->cd(1); // Seleziona il primo sottoplot
     c_residuals_high->cd(1)->SetGrid();
-    TGraphErrors *gr_residuals_q1_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_residuals_q1_high = new TGraphErrors(x1_high.size());
     int j = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q1_high[i] <= 3840) {
-            double expected_q1_high = linear_q1_high->Eval(x1[i]);
+		  float x1_h2 = x1[i];
+            double expected_q1_high = linear_q1_high->Eval(x1_h2);
             double residual_q1_high = means_q1_high[i] - expected_q1_high;
-            gr_residuals_q1_high->SetPoint(j, x1[i], residual_q1_high);
+            gr_residuals_q1_high->SetPoint(j, x1_h2, residual_q1_high);
             gr_residuals_q1_high->SetPointError(j, 0, sigma_res1_high[i]);
             j++;
         }
@@ -673,11 +707,12 @@ void calibrazioneQDC() {
 
     TF1 *horiz_q1_high = new TF1("horiz_q1_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q1_high->SetMarkerStyle(20);
-    gr_residuals_q1_high->SetMarkerColor(kRed);
+    gr_residuals_q1_high->SetMarkerColor(kPink+10);
     gr_residuals_q1_high->SetTitle("Residui q1 (High Resolution);Carica [nC];Residui");
     gr_residuals_q1_high->Draw("AP");
     gr_residuals_q1_high->Fit("horiz_q1_high");
     horiz_q1_high->Draw("same");
+    horiz_q1_high->SetLineColor(kPink+10);
 
     TPaveText *eqretta_q1_high = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q1_high->SetBorderSize(1);
@@ -694,13 +729,14 @@ void calibrazioneQDC() {
     // Secondo sottoplot: Residui per mean_q2_high
     c_residuals_high->cd(2); // Seleziona il secondo sottoplot
     c_residuals_high->cd(2)->SetGrid();
-    TGraphErrors *gr_residuals_q2_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_residuals_q2_high = new TGraphErrors(x2_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q2_high[i] <= 3840) {
-            double expected_q2_high = linear_q2_high->Eval(x2[i]);
+		  float x2_h2 = x2[i];
+            double expected_q2_high = linear_q2_high->Eval(x2_h2);
             double residual_q2_high = means_q2_high[i] - expected_q2_high;
-            gr_residuals_q2_high->SetPoint(j, x2[i], residual_q2_high);
+            gr_residuals_q2_high->SetPoint(j, x2_h2, residual_q2_high);
             gr_residuals_q2_high->SetPointError(j, 0, sigma_res2_high[i]);
             j++;
         }
@@ -708,11 +744,12 @@ void calibrazioneQDC() {
 
 TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q2_high->SetMarkerStyle(20);
-    gr_residuals_q2_high->SetMarkerColor(kRed);
+    gr_residuals_q2_high->SetMarkerColor(kAzure+1);
     gr_residuals_q2_high->SetTitle("Residui q2 (High Resolution);Carica [nC];Residui");
     gr_residuals_q2_high->Draw("AP");
     gr_residuals_q2_high->Fit("horiz_q2_high");
     horiz_q2_high->Draw("same");
+    horiz_q2_high->SetLineColor(kAzure+1);
 
     TPaveText *eqretta_q2_high = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q2_high->SetBorderSize(1);
@@ -729,13 +766,14 @@ TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a rett
     // Terzo sottoplot: Residui per mean_q3_high
     c_residuals_high->cd(3); // Seleziona il terzo sottoplot
     c_residuals_high->cd(3)->SetGrid();
-    TGraphErrors *gr_residuals_q3_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_residuals_q3_high = new TGraphErrors(x3_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q3_high[i] <= 3840) {
-            double expected_q3_high = linear_q3_high->Eval(x3[i]);
+		  float x3_h2 = x3[i];
+            double expected_q3_high = linear_q3_high->Eval(x3_h2);
             double residual_q3_high = means_q3_high[i] - expected_q3_high;
-            gr_residuals_q3_high->SetPoint(j, x3[i], residual_q3_high);
+            gr_residuals_q3_high->SetPoint(j, x3_h2, residual_q3_high);
             gr_residuals_q3_high->SetPointError(j, 0, sigma_res3_high[i]);
             j++;
         }
@@ -743,11 +781,12 @@ TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a rett
 
 TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q3_high->SetMarkerStyle(20);
-    gr_residuals_q3_high->SetMarkerColor(kRed);
+    gr_residuals_q3_high->SetMarkerColor(kTeal);
     gr_residuals_q3_high->SetTitle("Residui q3 (High Resolution);Carica [nC];Residui");
     gr_residuals_q3_high->Draw("AP");
     gr_residuals_q3_high->Fit("horiz_q3_high");
     horiz_q3_high->Draw("same");
+    horiz_q3_high->SetLineColor(kTeal);
 
     TPaveText *eqretta_q3_high = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q3_high->SetBorderSize(1);
@@ -764,13 +803,14 @@ TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a rett
     // Quarto sottoplot: Residui per mean_q4_high
     c_residuals_high->cd(4); // Seleziona il quarto sottoplot
     c_residuals_high->cd(4)->SetGrid();
-    TGraphErrors *gr_residuals_q4_high = new TGraphErrors(x_values.size());
+    TGraphErrors *gr_residuals_q4_high = new TGraphErrors(x4_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
         if (means_q4_high[i] <= 3840) {
-            double expected_q4_high = linear_q4_high->Eval(x4[i]);
+		  float x4_h2 = x4[i];
+            double expected_q4_high = linear_q4_high->Eval(x4_h2);
             double residual_q4_high = means_q4_high[i] - expected_q4_high;
-            gr_residuals_q4_high->SetPoint(j, x4[i], residual_q4_high);
+            gr_residuals_q4_high->SetPoint(j, x4_h2, residual_q4_high);
             gr_residuals_q4_high->SetPointError(j, 0, sigma_res4_high[i]);
             j++;
         }
@@ -778,11 +818,12 @@ TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a rett
 
 TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q4_high->SetMarkerStyle(20);
-    gr_residuals_q4_high->SetMarkerColor(kRed);
+    gr_residuals_q4_high->SetMarkerColor(kOrange-3);
     gr_residuals_q4_high->SetTitle("Residui q4 (High Resolution);Carica [nC];Residui");
     gr_residuals_q4_high->Draw("AP");
     gr_residuals_q4_high->Fit("horiz_q4_high");
     horiz_q4_high->Draw("same");
+    horiz_q4_high->SetLineColor(kOrange-3);
 
     TPaveText *eqretta_q4_high = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
     eqretta_q4_high->SetBorderSize(1);
@@ -841,7 +882,7 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     
     // Istogramma dei residui per q3_low
     c_histores->cd(3);
-    TH1F* h3 = new TH1F("h3", "Istogramma residui q3_low", 20, -20.0, 20.0);
+    TH1F* h3 = new TH1F("h3", "Istogramma residui q3_low", 20, -30.0, 30.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca3 = (means_q3_low[i]-linear_q3_low->Eval(x3[i]))/sigma_res3_low[i];
 	    h3->Fill(resid_della_ricca3);
@@ -881,9 +922,9 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     
     // Istogramma dei residui per q1_high
     c_historesh->cd(1);
-    TH1F* h1h = new TH1F("h1h", "Istogramma residui q1_high", 20, -20.0, 20.0);
-    for (int i=0; i < x_values.size(); i++) {
-	    float resid_della_ricca1 = (means_q1_high[i]-linear_q1_high->Eval(x1[i]))/sigma_res1_high[i];
+    TH1F* h1h = new TH1F("h1h", "Istogramma residui q1_high", 22, -200.0, 200.0);
+    for (int i=0; i < x1_high.size(); i++) {
+	    float resid_della_ricca1 = (means_q1_high[i]-linear_q1_high->Eval(x1_high[i]))/sigma_res1_high[i];
 	    h1h->Fill(resid_della_ricca1);
     }
     h1h->SetFillColorAlpha(kRed, 1.0);	// colore di riempimento dell'istogramma
@@ -899,9 +940,9 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     
     // Istogramma dei residui per q2_high
     c_historesh->cd(2);
-    TH1F* h2h = new TH1F("h2h", "Istogramma residui q2_low", 20, -20.0, 20.0);
-    for (int i=0; i < x_values.size(); i++) {
-	    float resid_della_ricca2 = (means_q2_high[i]-linear_q2_high->Eval(x2[i]))/sigma_res2_high[i];
+    TH1F* h2h = new TH1F("h2h", "Istogramma residui q2_low", 22, -200.0, 200.0);
+    for (int i=0; i < x2_high.size(); i++) {
+	    float resid_della_ricca2 = (means_q2_high[i]-linear_q2_high->Eval(x2_high[i]))/sigma_res2_high[i];
 	    h2h->Fill(resid_della_ricca2);
     }
     h2h->SetFillColorAlpha(kRed, 1.0);
@@ -915,9 +956,9 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     
     // Istogramma dei residui per q3_high
     c_historesh->cd(3);
-    TH1F* h3h = new TH1F("h3h", "Istogramma residui q3_high", 20, -20.0, 20.0);
-    for (int i=0; i < x_values.size(); i++) {
-	    float resid_della_ricca3 = (means_q3_high[i]-linear_q3_high->Eval(x3[i]))/sigma_res3_high[i];
+    TH1F* h3h = new TH1F("h3h", "Istogramma residui q3_high", 20, -200.0, 200.0);
+    for (int i=0; i < x3_high.size(); i++) {
+	    float resid_della_ricca3 = (means_q3_high[i]-linear_q3_high->Eval(x3_high[i]))/sigma_res3_high[i];
 	    h3h->Fill(resid_della_ricca3);
     }
     h3h->SetFillColorAlpha(kRed, 1.0);
@@ -931,9 +972,9 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     
     // Istogramma dei residui per q4_high
     c_historesh->cd(4);
-    TH1F* h4h = new TH1F("h4h", "Istogramma residui q4_high", 20, -20.0, 20.0);
-    for (int i=0; i < x_values.size(); i++) {
-	    float resid_della_ricca4 = (means_q4_high[i]-linear_q4_high->Eval(x4[i]))/sigma_res4_high[i];
+    TH1F* h4h = new TH1F("h4h", "Istogramma residui q4_high", 22, -200.0, 200.0);
+    for (int i=0; i < x4_high.size(); i++) {
+	    float resid_della_ricca4 = (means_q4_high[i]-linear_q4_high->Eval(x4_high[i]))/sigma_res4_high[i];
 	    h4h->Fill(resid_della_ricca4);
     }
     h4h->SetFillColorAlpha(kRed, 1.0);
