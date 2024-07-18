@@ -139,7 +139,7 @@ void calibrazioneTDC() {
     file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
     if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
     
-    double err_value = rit05+rit1+rit2+rit4+rit8+rit16+rit32;
+    double err_value = sqrt(pow(rit05,2.0)+pow(rit1,2.0)+pow(rit2,2.0)+pow(rit4,2.0)+pow(rit8,2.0)+pow(rit16,2.0)+pow(rit32,2.0));
     rit_errors.push_back(err_value);
    }
      
