@@ -42,7 +42,7 @@ void fitQDC_1234_landau() {
     }
 
     // Opzioni di stile
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
     gStyle->SetOptStat(1111);
 
     // Set histogram colors and transparency
@@ -89,7 +89,7 @@ void fitQDC_1234_landau() {
     legend->AddEntry(h_q4, "Segnale 4", "l");
     legend->Draw();
     
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
     gStyle->SetOptStat(1111);
     h_q1->SetStats(false); 
     h_q2->SetStats(false); 
@@ -223,10 +223,10 @@ void fitQDC_1234_landau() {
     horiz1->SetLineColor(kBlue);
     residui_q1->SetTitle("Segnale 1;QDC;Residui");
     residui_q1->SetMarkerStyle(1);
-    residui_q1->SetMarkerSize(.1);
+    //residui_q1->SetMarkerSize(.1);
     residui_q1->SetMarkerColor(kRed);
     residui_q1->SetLineColor(kRed);
-    residui_q1->SetStats(false); 
+    //residui_q1->SetStats(false); 
     residui_q1->Draw("AP");
     residui_q1->Fit("horiz_q1");
     horiz1->Draw("same");
@@ -259,10 +259,10 @@ void fitQDC_1234_landau() {
     horiz2->SetLineColor(kBlue);
     residui_q2->SetTitle("Segnale 2;QDC;Residui");
     residui_q2->SetMarkerStyle(1);
-    residui_q2->SetMarkerSize(.1);
+    //residui_q2->SetMarkerSize(.1);
     residui_q2->SetMarkerColor(kGreen);
     residui_q2->SetLineColor(kGreen);
-    residui_q2->SetStats(false); 
+    //residui_q2->SetStats(false); 
     residui_q2->Draw("AP");
     residui_q2->Fit("horiz_q2");
     horiz2->Draw("same");
@@ -294,10 +294,10 @@ void fitQDC_1234_landau() {
     horiz3->SetLineColor(kBlue);
     residui_q3->SetTitle("Segnale 3;QDC;Residui");
     residui_q3->SetMarkerStyle(1);
-    residui_q3->SetMarkerSize(.1);
+    //residui_q3->SetMarkerSize(.1);
     residui_q3->SetMarkerColor(kCyan);
     residui_q3->SetLineColor(kCyan);
-    residui_q3->SetStats(false); 
+    //residui_q3->SetStats(false); 
     residui_q3->Draw("AP");
     residui_q3->Fit("horiz_q3");
     horiz3->Draw("same");
@@ -329,10 +329,10 @@ void fitQDC_1234_landau() {
     horiz4->SetLineColor(kBlue);
     residui_q4->SetTitle("Segnale 4;QDC;Residui");
     residui_q4->SetMarkerStyle(1);
-    residui_q4->SetMarkerSize(.1);
+    //residui_q4->SetMarkerSize(.1);
     residui_q4->SetMarkerColor(kViolet);
     residui_q4->SetLineColor(kViolet);
-    residui_q4->SetStats(false); 
+    //residui_q4->SetStats(false); 
     residui_q4->Draw("AP");
     residui_q4->Fit("horiz_q4");
     horiz4->Draw("same");
@@ -359,7 +359,7 @@ c_histores->Divide(2, 2);
 
 // Istogramma dei residui per il primo fit (q1)
 c_histores->cd(1);
-TH1F* h1 = new TH1F("Istogramma pull Segnale 1", "Istogramma pull Segnale 1", 50, -10.0, 10.0);
+TH1F* h1 = new TH1F("Istogramma pull Segnale 1", "Istogramma pull Segnale 1", 31, -20.0, 20.0);
 for (int i = 1; i <= h_q1->GetNbinsX(); ++i) {
     float resid = (h_q1->GetBinContent(i) - landau_q1->Eval(h_q1->GetBinCenter(i))) / TMath::Sqrt(h_q1->GetBinContent(i));
     h1->Fill(resid);
@@ -372,11 +372,11 @@ gauss1->SetParameters(3.0, 0.0, 1.0);
 h1->Fit(gauss1);
 h1->Draw("E1");
 h1->Draw("bar same");
-gStyle->SetOptFit(1111);
+gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il terzo fit (q2)
 c_histores->cd(2);
-TH1F* h3 = new TH1F("Istogramma pull Segnale 2", "Istogramma pull Segnale 2", 50, -10.0, 10.0);
+TH1F* h3 = new TH1F("Istogramma pull Segnale 2", "Istogramma pull Segnale 2", 31, -20.0, 20.0);
 for (int i = 1; i <= h_q2->GetNbinsX(); ++i) {
     float resid = (h_q2->GetBinContent(i) - landau_q2->Eval(h_q2->GetBinCenter(i))) / TMath::Sqrt(h_q2->GetBinContent(i));
     h3->Fill(resid);
@@ -389,11 +389,11 @@ gauss3->SetParameters(3.0, 0.0, 1.0);
 h3->Fit(gauss3);
 h3->Draw("E1");
 h3->Draw("bar same");
-gStyle->SetOptFit(1111);
+gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il quinto fit (q3)
 c_histores->cd(3);
-TH1F* h5 = new TH1F("Istogramma pull Segnale 3","Istogramma pull Segnale 3", 50, -10.0, 10.0);
+TH1F* h5 = new TH1F("Istogramma pull Segnale 3","Istogramma pull Segnale 3", 31, -20.0, 20.0);
 for (int i = 1; i <= h_q3->GetNbinsX(); ++i) {
     float resid = (h_q3->GetBinContent(i) - landau_q3->Eval(h_q3->GetBinCenter(i))) / TMath::Sqrt(h_q3->GetBinContent(i));
     h5->Fill(resid);
@@ -406,11 +406,11 @@ gauss5->SetParameters(3.0, 0.0, 1.0);
 h5->Fit(gauss5);
 h5->Draw("E1");
 h5->Draw("bar same");
-gStyle->SetOptFit(1111);
+gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il settimo fit (q4)
 c_histores->cd(4);
-TH1F* h7 = new TH1F("Istogramma pull Segnale 4","Istogramma pull Segnale 4", 50, -10.0, 10.0);
+TH1F* h7 = new TH1F("Istogramma pull Segnale 4","Istogramma pull Segnale 4", 31, -20.0, 20.0);
 for (int i = 1; i <= h_q4->GetNbinsX(); ++i) {
     float resid = (h_q4->GetBinContent(i) - landau_q4->Eval(h_q4->GetBinCenter(i))) / TMath::Sqrt(h_q4->GetBinContent(i));
     h7->Fill(resid);
@@ -423,7 +423,7 @@ gauss7->SetParameters(3.0, 0.0, 1.0);
 h7->Fit(gauss7);
 h7->Draw("E1");
 h7->Draw("bar same");
-gStyle->SetOptFit(1111);
+gStyle->SetOptFit(111);
 
 // Salva la canvas come file pdf
 c_histores->Update();
