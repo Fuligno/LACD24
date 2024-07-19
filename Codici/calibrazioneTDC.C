@@ -43,7 +43,7 @@ void calibrazioneTDC() {
 
         // Extract x value from filename
         string x_str = line.substr(line.size() - 7, 3);  // Use the last three characters before the extension
-        double x_value = stod(x_str) / 10.0 + 21.2;
+        double x_value = stod(x_str) / 10.0;
 
         vector<double> col1, col2, col3, col4;
         double val1, val2, val3, val4, val5;
