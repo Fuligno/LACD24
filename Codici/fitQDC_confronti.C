@@ -113,19 +113,19 @@ void fitQDC_confronti() {
     h_q3->SetLineColor(kSpring);
     h_q3->SetLineWidth(1);
 
-    h_q4->SetLineColor(kSpring);
+    h_q4->SetLineColor(kOrange);
     h_q4->SetLineWidth(1);
     //
-    h_m1->SetLineColor(kPink);
+    h_m1->SetLineColor(kOrange);
     h_m1->SetLineWidth(1);
 
-    h_m2->SetLineColor(kPink);
+    h_m2->SetLineColor(kOrange);
     h_m2->SetLineWidth(1);
 
-    h_m3->SetLineColor(kPink);
+    h_m3->SetLineColor(kOrange);
     h_m3->SetLineWidth(1);
 
-    h_m4->SetLineColor(kPink);
+    h_m4->SetLineColor(kOrange);
     h_m4->SetLineWidth(1);
     //
     h_n1->SetLineColor(kAzure);
