@@ -17,6 +17,32 @@
 using namespace std;
 
 void calibrazioneTDC() {
+     // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
+    
+     ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
+     if (!file.is_open()) {
+         cout << "Cannot open file!" << endl;
+     return;
+     }
+     vector<double> rit_errors;	// vettore per contenere gli errori sui ritardi
+	string line;
+     string filename;
+     double rit05, rit1, rit2, rit4, rit8, rit16, rit32;	// errori sul ritardo introdotto da ciascuna levetta
+     getline(file, line); // Skip the header line
+     while (file.is_open()) {
+    
+     file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
+     if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
+    
+     double err_value = sqrt(pow(rit05,2.0)+pow(rit1,2.0)+pow(rit2,2.0)+pow(rit4,2.0)+pow(rit8,2.0)+pow(rit16,2.0)+pow(rit32,2.0));
+     rit_errors.push_back(err_value);
+    }
+     
+ file.close();
+     // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
+	
+	
+	
     // Open the input file containing the list of .txt files
     ifstream inputFile("../Dati/TDC/filenameTDC.txt");
     if (!inputFile.is_open()) {
@@ -32,7 +58,6 @@ void calibrazioneTDC() {
     vector<double> means_t4, errors_t4;
     vector<double> x_values;
 
-    string line;
     while (getline(inputFile, line)) {
         string filePath = "../Dati/TDC/" + line;
         ifstream dataFile(filePath);
@@ -43,7 +68,8 @@ void calibrazioneTDC() {
 
         // Extract x value from filename
         string x_str = line.substr(line.size() - 7, 3);  // Use the last three characters before the extension
-        double x_value = stod(x_str) / 10.0;
+        //double x_value = stod(x_str) / 10.0 + 21.2;
+	   double x_value = stod(x_str) / 10.0;
 
         vector<double> col1, col2, col3, col4;
         double val1, val2, val3, val4, val5;
@@ -105,46 +131,26 @@ void calibrazioneTDC() {
         return;
     }
     // Write header to the text file
-    textFile << "Filename\tMean_t1\tErr_t1\tMean_t2\tErr_t2\tMean_t3\tErr_t3\tMean_t4\tErr_t4\tx_value\n";
+    //textFile << "Filename\tMean_t1\tErr_t1\tMean_t2\tErr_t2\tMean_t3\tErr_t3\tMean_t4\tErr_t4\tx_value\n";
+    textFile << "Rit\tErrrit\tMeant1\tErrt1\tMeant2\tErrt2\tMeant3\tErrt3\tMeant4\tErrt4\n";
 
     int count = filenames.size();	// salvo il numero di eventi
     cout << count << endl;
 
     // Scrivi i risultati dai vettori nel file di testo
     for (size_t i = 0; i < filenames.size(); ++i) {
-        textFile << filenames[i] << "\t"
+        //textFile << filenames[i] << "\t"
+	    textFile << x_values[i] << "\t" << rit_errors[i] << "\t"
                 << means_t1[i] << "\t" << errors_t1[i] << "\t"
                 << means_t2[i] << "\t" << errors_t2[i] << "\t"
                 << means_t3[i] << "\t" << errors_t3[i] << "\t"
-                << means_t4[i] << "\t" << errors_t4[i] << "\t"
-                << x_values[i] << "\n";
+                //<< means_t4[i] << "\t" << errors_t4[i] << "\t"
+                //<< x_values[i] << "\n";
+		      << means_t4[i] << "\t" << errors_t4[i] << "\n";
     }
 
     // Finalize text file
     textFile.close();
-    
-    // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
-    
-    ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
-    if (!file.is_open()) {
-        cout << "Cannot open file!" << endl;
-    return;
-    }
-    vector<double> rit_errors;	// vettore per contenere gli errori sui ritardi
-    string filename;
-    double rit05, rit1, rit2, rit4, rit8, rit16, rit32;	// errori sul ritardo introdotto da ciascuna levetta
-    getline(file, line); // Skip the header line
-    while (file.is_open()) {
-    
-    file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
-    if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
-    
-    double err_value = sqrt(pow(rit05,2.0)+pow(rit1,2.0)+pow(rit2,2.0)+pow(rit4,2.0)+pow(rit8,2.0)+pow(rit16,2.0)+pow(rit32,2.0));
-    rit_errors.push_back(err_value);
-   }
-     
-file.close();
-    // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
 
 
 
