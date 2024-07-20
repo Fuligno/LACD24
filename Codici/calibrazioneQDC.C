@@ -1042,8 +1042,6 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     h4h->Draw("E1");
     h4h->Draw("bar same");
     gStyle->SetOptFit(111);
-    
-    // Salva la canvas come file PNG
     c_historesh4->Update();
 
     return;
