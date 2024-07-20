@@ -44,6 +44,7 @@ void correlazioni(){
     TH2F *hqt3 = new TH2F("hqt3", "q3 vs t3", 580, 200, 6000, 100, 400, 1400);
     TH2F *hqt4 = new TH2F("hqt4", "q4 vs t4", 580, 200, 6000, 100, 400, 1400);
     TH2F *htLR = new TH2F("htLR", "t2 vs t4-t3", 100, 400, 1400, 100, -500, 500);
+    TH2F *hqLR = new TH2F("hqLR", "q4 vs t4-t3", 580, 200, 6000, 100, -500, 500);
 
     
 
@@ -54,6 +55,7 @@ void correlazioni(){
         hqt3->Fill(q3, t3);
         hqt4->Fill(q4, t4);
         htLR->Fill(t2, t4-t3);
+        hqLR->Fill(q4, t4-t3);
 
     }
     std::cout << "Istogramma riempito" << std::endl;
@@ -73,6 +75,10 @@ void correlazioni(){
 
     TCanvas *c4 = new TCanvas("c4", "Istogramma 2D", 800, 600);
     c4->cd();
+    hqLR->Draw("colz");
+
+    TCanvas *c5 = new TCanvas("c5", "Istogramma 2D", 800, 600);
+    c5->cd();
     htLR->Draw("colz");
 
     // Salva il canvas in un file immagine
