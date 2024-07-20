@@ -98,8 +98,7 @@ void calibrazioneTDC() {
             for (double val : data) {
                 variance += (val - mean) * (val - mean);
             }
-            variance /= n;
-            error = sqrt(variance / n);
+            error = sqrt(variance / (n-1));
         };
 
         double mean_t1, err_t1, mean_t2, err_t2, mean_t3, err_t3, mean_t4, err_t4;
