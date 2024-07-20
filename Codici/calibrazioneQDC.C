@@ -86,7 +86,7 @@ void calibrazioneQDC() {
             for (double val : data) {
                 variance += (val - mean) * (val - mean);
             }
-            error = sqrt(variance / (n-1));
+            error = sqrt(variance) / (n-1);
         };
 
         double mean_q1_low, err_q1_low, mean_q2_low, err_q2_low, mean_q3_low, err_q3_low, mean_q4_low, err_q4_low;
