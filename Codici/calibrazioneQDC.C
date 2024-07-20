@@ -36,6 +36,7 @@ void calibrazioneQDC() {
     vector<double> means_q4_high, errors_q4_high;
     vector<double> x_values, x1, x2, x3, x4;
     vector<double> x1_high, x2_high, x3_high, x4_high;	// vettori per contenere valori attenuazione solo per alta risoluzione
+    vector<double> attvec; // vettore per contenere i valori di attenuazione
 
     string line;
     while (getline(inputFile, line)) {
@@ -50,6 +51,7 @@ void calibrazioneQDC() {
         string x_str = line.substr(line.size() - 7, 3);  
         double A = stod(x_str)/10.0;
         double x_value = pow(10, - A / 20.0);
+	   attvec.push_back(A);
 
         
         vector<double> col1, col2, col3, col4, col5, col6, col7, col8, col9;
@@ -130,39 +132,6 @@ void calibrazioneQDC() {
         x3.push_back(x * 20.894 / 50.0);
         x4.push_back(x * 20.924 / 50.0);
     }
-
-    // Open the text file for writing
-    ofstream textFileHigh("../Dati/QDC/calibrazioneQDC_results_high.txt");
-    ofstream textFileLow("../Dati/QDC/calibrazioneQDC_results_low.txt");
-    if (!textFileLow.is_open() || !textFileHigh.is_open()) {
-        cerr << "Error opening text file for writing" << endl;
-        return;
-    }
-    // Write header to the text file
-    textFileLow << "Filename\tMean_q1_low\tErr_q1_low\tMean_q2_low\tErr_q2_low\tMean_q3_low\tErr_q3_low\tMean_q4_low\tErr_q4_low\tx_value\n";
-    textFileHigh << "Filename\tMean_q1_high\tErr_q1_high\tMean_q2_high\tErr_q2_high\tMean_q3_high\tErr_q3_high\tMean_q4_high\tErr_q4_high\tx_value\n";
-
-    for (size_t i = 0; i < filenames.size(); ++i) {
-        textFileLow << filenames[i] << "\t"
-                << means_q1_low[i] << "\t" << errors_q1_low[i] << "\t"
-                << means_q2_low[i] << "\t" << errors_q2_low[i] << "\t"
-                << means_q3_low[i] << "\t" << errors_q3_low[i] << "\t"
-                << means_q4_low[i] << "\t" << errors_q4_low[i] << "\t"
-                << x_values[i] << "\n";
-
-        textFileHigh << filenames[i] << "\t"
-                << means_q1_high[i] << "\t" << errors_q1_high[i] << "\t"
-                << means_q2_high[i] << "\t" << errors_q2_high[i] << "\t"
-                << means_q3_high[i] << "\t" << errors_q3_high[i] << "\t"
-                << means_q4_high[i] << "\t" << errors_q4_high[i] << "\t"
-                << x_values[i] << "\n";
-        
-
-    }
-
-    // Finalize text file
-    textFileHigh.close();
-    textFileLow.close();
 
     // ############# CALCOLO DEGLI ERRORI SULLE ATTENUAZIONI #############
     
@@ -249,6 +218,70 @@ void calibrazioneQDC() {
 
 
     // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
+    
+    
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////    
+    
+    // Open the text file for writing
+    ofstream textFileHigh1("../Dati/QDC/calibrazioneQDC_results_high1.txt");
+    ofstream textFileHigh2("../Dati/QDC/calibrazioneQDC_results_high2.txt");
+    ofstream textFileHigh3("../Dati/QDC/calibrazioneQDC_results_high3.txt");
+    ofstream textFileHigh4("../Dati/QDC/calibrazioneQDC_results_high4.txt");
+    ofstream textFileLow1("../Dati/QDC/calibrazioneQDC_results_low1.txt");
+    ofstream textFileLow2("../Dati/QDC/calibrazioneQDC_results_low2.txt");
+    ofstream textFileLow3("../Dati/QDC/calibrazioneQDC_results_low3.txt");
+    ofstream textFileLow4("../Dati/QDC/calibrazioneQDC_results_low4.txt");
+    if (!textFileLow1.is_open() || !textFileHigh1.is_open() || !textFileLow2.is_open() || !textFileHigh2.is_open() || !textFileLow3.is_open() || !textFileHigh3.is_open() || !textFileLow4.is_open() || !textFileHigh4.is_open()) {
+        cerr << "Error opening text file for writing" << endl;
+        return;
+    }
+    // Write header to the text file
+    //textFileLow << "Filename\tMean_q1_low\tErr_q1_low\tMean_q2_low\tErr_q2_low\tMean_q3_low\tErr_q3_low\tMean_q4_low\tErr_q4_low\tx_value\n";
+    textFileLow1 << "Att\tCarica\tErrCarica\tMeanq1low\tErrq1low\n";
+    textFileLow2 << "Att\tCarica\tErrCarica\tMeanq2low\tErrq2low\n";
+    textFileLow3 << "Att\tCarica\tErrCarica\tMeanq3low\tErrq3low\n";
+    textFileLow4 << "Att\tCarica\tErrCarica\tMeanq4low\tErrq4low\n";
+    //textFileHigh << "Filename\tMean_q1_high\tErr_q1_high\tMean_q2_high\tErr_q2_high\tMean_q3_high\tErr_q3_high\tMean_q4_high\tErr_q4_high\tx_value\n";
+    textFileHigh1 << "Att\tCarica\tErrCarica\tMeanq1high\tErrq1high\n";
+    textFileHigh2 << "Att\tCarica\tErrCarica\tMeanq2high\tErrq2high\n";
+    textFileHigh3 << "Att\tCarica\tErrCarica\tMeanq3high\tErrq3high\n";
+    textFileHigh4 << "Att\tCarica\tErrCarica\tMeanq4high\tErrq4high\n";
+
+    for (size_t i = 0; i < filenames.size(); ++i) {
+        textFileLow1 << attvec[i] << "\t" << x1[i] << "\t" << att_errors1[i] << "\t"
+                << means_q1_low[i] << "\t" << errors_q1_low[i] << "\n";
+        textFileLow2 << attvec[i] << "\t" << x2[i] << "\t" << att_errors2[i] << "\t"
+                << means_q2_low[i] << "\t" << errors_q2_low[i] << "\n";
+        textFileLow3 << attvec[i] << "\t" << x3[i] << "\t" << att_errors3[i] << "\t"
+                << means_q3_low[i] << "\t" << errors_q3_low[i] << "\n";
+        textFileLow4 << attvec[i] << "\t" << x4[i] << "\t" << att_errors4[i] << "\t"
+                << means_q4_low[i] << "\t" << errors_q4_low[i] << "\n";
+
+        textFileHigh1 << attvec[i] << "\t" << x1[i] << "\t" << att_errors1[i] << "\t"
+                << means_q1_high[i] << "\t" << errors_q1_high[i] << "\n";
+        textFileHigh2 << attvec[i] << "\t" << x2[i] << "\t" << att_errors2[i] << "\t"
+                << means_q2_high[i] << "\t" << errors_q2_high[i] << "\n";
+        textFileHigh3 << attvec[i] << "\t" << x3[i] << "\t" << att_errors3[i] << "\t"
+                << means_q3_high[i] << "\t" << errors_q3_high[i] << "\n";
+        textFileHigh4 << attvec[i] << "\t" << x4[i] << "\t" << att_errors4[i] << "\t"
+                << means_q4_high[i] << "\t" << errors_q4_high[i] << "\n";
+        
+
+    }
+
+    // Finalize text file
+    textFileHigh1.close();
+    textFileHigh2.close();
+    textFileHigh3.close();
+    textFileHigh4.close();
+    textFileLow1.close();
+    textFileLow2.close();
+    textFileLow3.close();
+    textFileLow4.close();
 
 
 //////////////////////////////////////////////////////////////////////////////////
