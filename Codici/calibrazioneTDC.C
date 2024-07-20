@@ -17,32 +17,6 @@
 using namespace std;
 
 void calibrazioneTDC() {
-     // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
-    
-     ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
-     if (!file.is_open()) {
-         cout << "Cannot open file!" << endl;
-     return;
-     }
-     vector<double> rit_errors;	// vettore per contenere gli errori sui ritardi
-	string line;
-     string filename;
-     double rit05, rit1, rit2, rit4, rit8, rit16, rit32;	// errori sul ritardo introdotto da ciascuna levetta
-     getline(file, line); // Skip the header line
-     while (file.is_open()) {
-    
-     file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
-     if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
-    
-     double err_value = sqrt(pow(rit05,2.0)+pow(rit1,2.0)+pow(rit2,2.0)+pow(rit4,2.0)+pow(rit8,2.0)+pow(rit16,2.0)+pow(rit32,2.0));
-     rit_errors.push_back(err_value);
-    }
-     
- file.close();
-     // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
-	
-	
-	
     // Open the input file containing the list of .txt files
     ifstream inputFile("../Dati/TDC/filenameTDC.txt");
     if (!inputFile.is_open()) {
@@ -58,6 +32,7 @@ void calibrazioneTDC() {
     vector<double> means_t4, errors_t4;
     vector<double> x_values;
 
+    string line;
     while (getline(inputFile, line)) {
         string filePath = "../Dati/TDC/" + line;
         ifstream dataFile(filePath);
@@ -68,8 +43,7 @@ void calibrazioneTDC() {
 
         // Extract x value from filename
         string x_str = line.substr(line.size() - 7, 3);  // Use the last three characters before the extension
-        //double x_value = stod(x_str) / 10.0 + 21.2;
-	   double x_value = stod(x_str) / 10.0;
+        double x_value = stod(x_str) / 10.0 + 21.2;
 
         vector<double> col1, col2, col3, col4;
         double val1, val2, val3, val4, val5;
@@ -98,7 +72,8 @@ void calibrazioneTDC() {
             for (double val : data) {
                 variance += (val - mean) * (val - mean);
             }
-            error = sqrt(variance)/(n-1);
+            variance /= n;
+            error = sqrt(variance / n);
         };
 
         double mean_t1, err_t1, mean_t2, err_t2, mean_t3, err_t3, mean_t4, err_t4;
@@ -130,26 +105,46 @@ void calibrazioneTDC() {
         return;
     }
     // Write header to the text file
-    //textFile << "Filename\tMean_t1\tErr_t1\tMean_t2\tErr_t2\tMean_t3\tErr_t3\tMean_t4\tErr_t4\tx_value\n";
-    textFile << "Rit\tErrrit\tMeant1\tErrt1\tMeant2\tErrt2\tMeant3\tErrt3\tMeant4\tErrt4\n";
+    textFile << "Filename\tMean_t1\tErr_t1\tMean_t2\tErr_t2\tMean_t3\tErr_t3\tMean_t4\tErr_t4\tx_value\n";
 
     int count = filenames.size();	// salvo il numero di eventi
     cout << count << endl;
 
     // Scrivi i risultati dai vettori nel file di testo
     for (size_t i = 0; i < filenames.size(); ++i) {
-        //textFile << filenames[i] << "\t"
-	    textFile << x_values[i] << "\t" << rit_errors[i] << "\t"
+        textFile << filenames[i] << "\t"
                 << means_t1[i] << "\t" << errors_t1[i] << "\t"
                 << means_t2[i] << "\t" << errors_t2[i] << "\t"
                 << means_t3[i] << "\t" << errors_t3[i] << "\t"
-                //<< means_t4[i] << "\t" << errors_t4[i] << "\t"
-                //<< x_values[i] << "\n";
-		      << means_t4[i] << "\t" << errors_t4[i] << "\n";
+                << means_t4[i] << "\t" << errors_t4[i] << "\t"
+                << x_values[i] << "\n";
     }
 
     // Finalize text file
     textFile.close();
+    
+    // ############# CALCOLO DEGLI ERRORI SUI RITARDI #############
+    
+    ifstream file("../Dati/TDC/Ritardi_calibrazione_TDC.txt");	// apro il file con tutti i ritardi e le levette usate
+    if (!file.is_open()) {
+        cout << "Cannot open file!" << endl;
+    return;
+    }
+    vector<double> rit_errors;	// vettore per contenere gli errori sui ritardi
+    string filename;
+    double rit05, rit1, rit2, rit4, rit8, rit16, rit32;	// errori sul ritardo introdotto da ciascuna levetta
+    getline(file, line); // Skip the header line
+    while (file.is_open()) {
+    
+    file >> filename >> rit05 >> rit1 >> rit2 >> rit4 >> rit8 >> rit16 >> rit32;
+    if (file.eof()) break;	// se arrivo alla fine del file, esco dal while
+    
+    double err_value = sqrt(pow(rit05,2.0)+pow(rit1,2.0)+pow(rit2,2.0)+pow(rit4,2.0)+pow(rit8,2.0)+pow(rit16,2.0)+pow(rit32,2.0));
+    rit_errors.push_back(err_value);
+   }
+     
+file.close();
+    // ############## FINE CALCOLO DEGLI ERRORI SUI RITARDI ##################
 
 
 
@@ -310,11 +305,9 @@ void calibrazioneTDC() {
     line_0->SetLineColor(kBlack);
 
     TCanvas *c_residui = new TCanvas("c_residui", "Residui TDC", 1200, 800);
-    c_residui->Divide(2, 2);
 
     // Residui per t1
-    c_residui->cd(1);
-    c_residui->cd(1)->SetGrid();
+    c_residui->cd();
     TGraphErrors *residui_t1 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double fit_value = linear_t1->Eval(x_values[i]);
@@ -326,7 +319,7 @@ void calibrazioneTDC() {
     
     TF1 *horiz1 = new TF1("horiz_t1", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     horiz1->SetLineColor(kRed);
-    residui_t1->SetTitle("Residui t1;Ritardi [ns];Residui");
+    residui_t1->SetTitle("Residui canale 0;Ritardi [ns];Residui");
     residui_t1->SetMarkerStyle(20);
     residui_t1->SetMarkerColor(kRed);
     residui_t1->Draw("AP");
@@ -347,8 +340,8 @@ void calibrazioneTDC() {
     eqretta1->Draw("same");
 
     // Residui per t2
-    c_residui->cd(2);
-    c_residui->cd(2)->SetGrid();
+    TCanvas *c_residui1 = new TCanvas("c_residui1", "Residui TDC", 1200, 800);
+    c_residui1->cd();
     TGraphErrors *residui_t2 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double fit_value = linear_t2->Eval(x_values[i]);
@@ -360,7 +353,7 @@ void calibrazioneTDC() {
     
     TF1 *horiz2 = new TF1("horiz_t2", "pol1", 0.0, 100.0);	// fit a retta dei residui
     horiz2->SetLineColor(kBlue);
-    residui_t2->SetTitle("Residui t2;Ritardi [ns];Residui");
+    residui_t2->SetTitle("Residui canale 1;Ritardi [ns];Residui");
     residui_t2->SetMarkerStyle(21);
     residui_t2->SetMarkerColor(kBlue);
     residui_t2->Draw("AP");
@@ -381,8 +374,8 @@ void calibrazioneTDC() {
     eqretta2->Draw("same");
 
     // Residui per t3
-    c_residui->cd(3);
-    c_residui->cd(3)->SetGrid();
+    TCanvas *c_residui2 = new TCanvas("c_residui2", "Residui TDC", 1200, 800);
+    c_residui2->cd();
     TGraphErrors *residui_t3 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double fit_value = linear_t3->Eval(x_values[i]);
@@ -393,7 +386,7 @@ void calibrazioneTDC() {
     }
     TF1 *horiz3 = new TF1("horiz_t3", "pol1", 0.0, 100.0);	// fit a retta dei residui
     horiz3->SetLineColor(kGreen);
-    residui_t3->SetTitle("Residui t3;Ritardi [ns];Residui");
+    residui_t3->SetTitle("Residui canale 2;Ritardi [ns];Residui");
     residui_t3->SetMarkerStyle(22);
     residui_t3->SetMarkerColor(kGreen);
     residui_t3->Draw("AP");
@@ -414,8 +407,8 @@ void calibrazioneTDC() {
     eqretta3->Draw("same");
 
     // Residui per t4
-    c_residui->cd(4);
-    c_residui->cd(4)->SetGrid();
+    TCanvas *c_residui3 = new TCanvas("c_residui3", "Residui TDC", 1200, 800);
+    c_residui3->cd();
     TGraphErrors *residui_t4 = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double fit_value = linear_t4->Eval(x_values[i]);
@@ -426,7 +419,7 @@ void calibrazioneTDC() {
     }
     TF1 *horiz4 = new TF1("horiz_t4", "pol1", 0.0, 100.0);	// fit a retta dei residui
     horiz4->SetLineColor(kMagenta);
-    residui_t4->SetTitle("Residui t4;Ritardi [ns];Residui");
+    residui_t4->SetTitle("Residui canale 3;Ritardi [ns];Residui");
     residui_t4->SetMarkerStyle(23);
     residui_t4->SetMarkerColor(kMagenta);
     residui_t4->Draw("AP");
@@ -458,17 +451,17 @@ void calibrazioneTDC() {
     
     // ### Istogrammi dei residui ###
     TCanvas *c_histores = new TCanvas("c_histores", "Istogramma residui TDC", 1200, 800);
-    c_histores->Divide(2, 2);
-    
+
     // Istogramma dei residui per t1
-    c_histores->cd(1);
-    TH1F* h1 = new TH1F("h1", "Istogramma residui t1", 20, -5.0, 5.0);
+    c_histores->cd();
+    TH1F* h1 = new TH1F("Canale 0", "Istogramma residui t1", 20, -5.0, 5.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca1 = (means_t1[i]-linear_t1->Eval(x_values[i]))/sigma_res1[i];
 	    h1->Fill(resid_della_ricca1);
     }
     h1->SetFillColorAlpha(kRed, 1.0);	// colore di riempimento dell'istogramma
     h1->SetFillStyle(3002);	// pattern di riempimento
+    h1->SetTitle("Istogramma dei pull; conteggi; pull");
     //TCanvas* c2 = new TCanvas("c2", "Istogramma dei residui TDC", 600, 0, 500, 500);
     TF1* gauss1 = new TF1("gauss1", "gaus", -2.0, 2.0);
     gauss1->SetParameters(3.0, 0.0, 1.0);
@@ -477,56 +470,63 @@ void calibrazioneTDC() {
     h1->Draw("bar same");
     //gStyle->SetOptStat(0);
     gStyle->SetOptFit(1111);	// visualizzo le statistiche
+    c_histores->Update();
     
     // Istogramma dei residui per t2
-    c_histores->cd(2);
-    TH1F* h2 = new TH1F("h2", "Istogramma residui t2", 20, -5.0, 5.0);
+    TCanvas *c_histores1 = new TCanvas("c_histores1", "Istogramma residui TDC", 1200, 800);
+    c_histores1->cd();
+    TH1F* h2 = new TH1F("Canale 1", "Istogramma residui t2", 20, -5.0, 5.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca2 = (means_t2[i]-linear_t2->Eval(x_values[i]))/sigma_res2[i];
 	    h2->Fill(resid_della_ricca2);
     }
     h2->SetFillColorAlpha(kRed, 1.0);
     h2->SetFillStyle(3002);
+    h2->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss2 = new TF1("gauss2", "gaus", -2.0, 2.0);
     gauss2->SetParameters(3.0, 0.0, 1.0);
     h2->Fit(gauss2);
     h2->Draw("E1");
     h2->Draw("bar same");
     gStyle->SetOptFit(1111);
+    c_histores1->Update();
     
     // Istogramma dei residui per t3
-    c_histores->cd(3);
-    TH1F* h3 = new TH1F("h3", "Istogramma residui t3", 20, -5.0, 5.0);
+    TCanvas *c_histores2 = new TCanvas("c_histores2", "Istogramma residui TDC", 1200, 800);
+    c_histores2->cd();
+    TH1F* h3 = new TH1F("Canale 2", "Istogramma residui t3", 20, -5.0, 5.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca3 = (means_t3[i]-linear_t3->Eval(x_values[i]))/sigma_res3[i];
 	    h3->Fill(resid_della_ricca3);
     }
     h3->SetFillColorAlpha(kRed, 1.0);
     h3->SetFillStyle(3002);
+    h3->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss3 = new TF1("gauss3", "gaus", -2.0, 2.0);
     gauss3->SetParameters(3.0, 0.0, 1.0);
     h3->Fit(gauss3);
     h3->Draw("E1");
     h3->Draw("bar same");
     gStyle->SetOptFit(1111);
+    c_histores2->Update();
     
     // Istogramma dei residui per t4
-    c_histores->cd(4);
-    TH1F* h4 = new TH1F("h4", "Istogramma residui t4", 20, -5.0, 5.0);
+    TCanvas *c_histores3 = new TCanvas("c_histores3", "Istogramma residui TDC", 1200, 800);
+    c_histores3->cd();
+    TH1F* h4 = new TH1F("Canale 3", "Istogramma residui t4", 20, -5.0, 5.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca4 = (means_t4[i]-linear_t4->Eval(x_values[i]))/sigma_res4[i];
 	    h4->Fill(resid_della_ricca4);
     }
     h4->SetFillColorAlpha(kRed, 1.0);
     h4->SetFillStyle(3002);
+    h4->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss4 = new TF1("gauss4", "gaus", -2.0, 2.0);
     gauss4->SetParameters(3.0, 0.0, 1.0);
     h4->Fit(gauss4);
     h4->Draw("E1");
     h4->Draw("bar same");
     gStyle->SetOptFit(1111);
+    c_histores3->Update();
     
-    // Salva la canvas come file PNG
-    c_histores->Update();
-    c_histores->SaveAs("../Dati/TDC/calibrazioneTDC_historesidui.png");
 }
