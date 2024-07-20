@@ -48,12 +48,18 @@ void correlazioni(){
     TH2F *ht2LR = new TH2F("ht2LR", "t2 vs t4-t3", 100, 400, 1400, 100, -500, 500);
     TH2F *ht4LR = new TH2F("ht4LR", "t4 vs t4-t3", 100, 400, 1400, 100, -500, 500);
     TH2F *hqLR = new TH2F("hqLR", "q4 vs t4-t3", 580, 200, 6000, 100, -500, 500);
-    
-    
 
+    
+    TGraph *grq1 = new TGraph(nEntries);
+    TGraph *grq2 = new TGraph(nEntries);
+    TGraph *grq3 = new TGraph(nEntries);
+    TGraph *grq4 = new TGraph(nEntries);
     for (long i = 0; i < nEntries; ++i) {
         tree->GetEntry(i);
-
+        grq1->SetPoint(i, clock, q1);
+        grq2->SetPoint(i, clock, q2);
+        grq3->SetPoint(i, clock, q3);
+        grq4->SetPoint(i, clock, q4);
         hqt2->Fill(q2, t2);
         hqt3->Fill(q3, t3);
         hqt4->Fill(q4, t4);
@@ -64,6 +70,29 @@ void correlazioni(){
         hqLR->Fill(q4, t4-t3);
 
     }
+
+    double yMin = 200;  // Limite minimo dell'asse Y
+    double yMax = 10000; // Limite massimo dell'asse Y
+    double xmin = 1000;
+    double xmax = 5700000;
+    grq1->SetMinimum(yMin);
+    grq1->SetMaximum(yMax);
+    grq2->SetMinimum(yMin);
+    grq2->SetMaximum(yMax);
+    grq3->SetMinimum(yMin);
+    grq3->SetMaximum(yMax);
+    grq4->SetMinimum(yMin);
+    grq4->SetMaximum(yMax);
+    grq1->GetXaxis()->SetLimits(xmin, xmax);
+    grq2->GetXaxis()->SetLimits(xmin, xmax);
+    grq3->GetXaxis()->SetLimits(xmin, xmax);
+    grq4->GetXaxis()->SetLimits(xmin, xmax);
+    grq1->SetLineColor(kRed+1.);
+    grq2->SetLineColor(kGreen+1.);
+    grq3->SetLineColor(kCyan+1.);
+    grq4->SetLineColor(kViolet+1.);
+
+
     std::cout << "Istogramma riempito" << std::endl;
 
     // Crea un canvas per disegnare l'istogramma
@@ -99,6 +128,41 @@ void correlazioni(){
     c8->cd();
     hq3q4->Draw("colz");
 
+
+    TCanvas *c9 = new TCanvas("c9", "4 Graphs in One Canvas", 800, 800);
+    c9->Divide(1, 4,0,0);
+    for (int i = 1; i <= 4; ++i) {
+        c9->cd(i);
+        if (i == 1) {
+            grq1->Draw("APL");
+            grq1->SetTitle("");
+            grq1->GetYaxis()->SetTitle("QDC"); 
+            grq1->GetXaxis()->SetLabelSize(0); // Rimuovere le etichette dell'asse X per i pad superiori
+            grq1->GetXaxis()->SetTitle("");
+            c9->cd(i)->SetGrid();
+        } else if (i == 2) {
+            grq2->Draw("APL");
+            grq2->SetTitle("");
+            grq2->GetXaxis()->SetLabelSize(0); // Rimuovere le etichette dell'asse X per i pad superiori
+            grq2->GetXaxis()->SetTitle("");
+            c9->cd(i)->SetGrid();
+        } else if (i == 3) {
+            grq3->Draw("APL");
+            grq3->SetTitle("");
+            grq3->GetXaxis()->SetLabelSize(0); // Rimuovere le etichette dell'asse X per i pad superiori
+            grq3->GetXaxis()->SetTitle("");
+            c9->cd(i)->SetGrid();
+        } else if (i == 4) {
+            grq4->Draw("APL");
+            grq4->SetTitle("");
+            grq4->GetXaxis()->SetTitle("Time [s]");
+            c9->cd(i)->SetGrid();
+        }
+
+    }
+
+    // Aggiornare il canvas
+    c9->Update();
 
     // Salva il canvas in un file immagine
     //canvas->SaveAs("histogram2D.png");
