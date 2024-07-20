@@ -10,6 +10,25 @@
 
 using namespace std;
 
+double landaushort(double* x, double* p){
+    if(x[0]>1300 || x[0]< 700){return 0;}
+    double fitval;
+    double norm = p[0];
+    double MPV = p[1];
+    double sigma = p[2];
+    fitval = norm*TMath::Landau(x[0], MPV, sigma, true);
+    return fitval;
+}
+double graphlandau(double* x, double* p) {
+    double fitval;
+    double norm = p[0];
+    double MPV = p[1];
+    double sigma = p[2];
+    fitval = norm*TMath::Landau(x[0], MPV, sigma, true);
+    return fitval;
+}
+
+
 void fitQDC_24_landau() {
 
     // Prende i dati dal tree
@@ -27,7 +46,7 @@ void fitQDC_24_landau() {
     int nbins = 1100;
     double xmin = 0, xmax = 5500;
     TH1F *h_q1 = new TH1F("Segnale 1", "QDC Channel 0", nbins, xmin, xmax);
-    TH1F *h_q2 = new TH1F("Segnale 2", "QDC Channel 1", 700, xmin, 3500.);
+    TH1F *h_q2 = new TH1F("Segnale 2", "QDC Channel 1", nbins, xmin, xmax);
     TH1F *h_q3 = new TH1F("Segnale 3", "QDC Channel 2", nbins, xmin, xmax);
     TH1F *h_q4 = new TH1F("Segnale 4", "QDC Channel 3", nbins, xmin, xmax);
 
@@ -70,8 +89,10 @@ void fitQDC_24_landau() {
     h_q4->SetStats(true); 
 
     double xmin_fit = 0., xmax_fit = 5000.;
+    double_t* par1;
     TF1 *landau_q1 = new TF1("landau_q1", "landau", xmin_fit, xmax_fit);
-    TF1 *landau_q2 = new TF1("landau_q2", "landau", xmin_fit, 3000.);
+    TF1 *landau_q2 = new TF1("landau_q2", landaushort, xmin_fit, xmax_fit, 3);
+    TF1* func = new TF1("func", graphlandau, xmin_fit, xmax_fit, 3);
     TF1 *landau_q3 = new TF1("landau_q3", "landau", xmin_fit, xmax_fit);
     TF1 *landau_q4 = new TF1("landau_q4", "landau", xmin_fit, xmax_fit);
 
@@ -97,38 +118,52 @@ void fitQDC_24_landau() {
     h_q2->Fit("landau_q2");
     h_q3->Fit("landau_q3");
     h_q4->Fit("landau_q4");
-
+    par1 = landau_q2->GetParameters();
+    h_q2->GetListOfFunctions()->Clear();
+    //func->SetParameters(par1[0],par1[1],par1[2]);
+    func->FixParameter(0, par1[0]);
+    func->FixParameter(1, par1[1]);
+    func->FixParameter(2, par1[2]);
+    h_q2->Fit("func");
+    func->SetLineColor(kBlue);
+    //func->Draw("same");
     // Disegna istogrammi + fit
     TCanvas *c1_landau = new TCanvas("c1_landau", "Segnale 1", 1500, 1200);
+    //h_q1->GetListOfFunctions()->Clear();
     h_q1->SetTitle("Trigger S2-4, Segnale 1;QDC;#frac{dN}{d QDC}");
     h_q1->Draw("E");
     h_q1->Draw("HIST SAME");
-    landau_q1->Draw("same");
+    //landau_q1->Draw("same");
     c1_landau->SetGrid();
     c1_landau->Update();
 
     TCanvas *c2_landau = new TCanvas("c2_landau", "Segnale 2", 1500, 1200);
+    //h_q2->GetListOfFunctions()->Clear();
+    c2_landau->cd();
     h_q2->SetTitle("Trigger S2-4, Segnale 2;QDC;#frac{dN}{d QDC}");
     h_q2->Draw("E");
-    h_q2->Draw("HIST SAME");
-    landau_q2->Draw("same");
+    h_q2->Draw("SAME");
+    //func->Draw("same");
+    //landau_q2->Draw("same");
     h_q2->GetXaxis()->SetRangeUser(0, 5000);
     c2_landau->SetGrid();
     c2_landau->Update();
 
     TCanvas *c3_landau = new TCanvas("c3_landau", "Segnale 3", 1500, 1200);
+    //h_q3->GetListOfFunctions()->Clear();
     h_q3->SetTitle("Trigger S2-4, Segnale 3;QDC;#frac{dN}{d QDC}");
     h_q3->Draw("E");
     h_q3->Draw("HIST SAME");
-    landau_q3->Draw("same");
+    //landau_q3->Draw("same");
     c3_landau->SetGrid();
     c3_landau->Update();
 
     TCanvas *c4_landau = new TCanvas("c4_landau", "Segnale 4", 1500, 1200);
+    //h_q4->GetListOfFunctions()->Clear();
     h_q4->SetTitle("Trigger S2-4, Segnale 4;QDC;#frac{dN}{d QDC}");
     h_q4->Draw("E");
     h_q4->Draw("HIST SAME");
-    landau_q4->Draw("same");
+    //landau_q4->Draw("same");
     c4_landau->SetGrid();
     c4_landau->Update();
 
