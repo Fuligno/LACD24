@@ -150,7 +150,7 @@ void fitQDC_3_conv() {
 
     // Disegna istogrammi + fit
     TCanvas *c1_conv = new TCanvas("c1_conv", "Segnale 1", 1500, 1200);
-    h_q1->SetTitle("Trigger S3, Segnale 1;QDC;#frac{dN}{d QDC}");
+    h_q1->SetTitle("QDC Trigger S3, Segnale 1;QDC;#frac{dN}{d QDC}");
     h_q1->Draw("E");
     h_q1->Draw("HIST SAME");
     landau_q1->Draw("same");
@@ -158,7 +158,7 @@ void fitQDC_3_conv() {
     c1_conv->Update();
 
     TCanvas *c2_conv = new TCanvas("c2_conv", "Segnale 2", 1500, 1200);
-    h_q2->SetTitle("Trigger S3, Segnale 2;QDC;#frac{dN}{d QDC}");
+    h_q2->SetTitle("QDC Trigger S3, Segnale 2;QDC;#frac{dN}{d QDC}");
     h_q2->Draw("E");
     h_q2->Draw("HIST SAME");
     landau_q2->Draw("same");
@@ -166,7 +166,7 @@ void fitQDC_3_conv() {
     c2_conv->Update();
 
     TCanvas *c3_conv = new TCanvas("c3_conv", "Segnale 3", 1500, 1200);
-    h_q3->SetTitle("Trigger S3, Segnale 3;QDC;#frac{dN}{d QDC}");
+    h_q3->SetTitle("QDC Trigger S3, Segnale 3;QDC;#frac{dN}{d QDC}");
     h_q3->Draw("E");
     h_q3->Draw("HIST SAME");
     landau_q3->Draw("same");
@@ -174,7 +174,7 @@ void fitQDC_3_conv() {
     c3_conv->Update();
 
     TCanvas *c4_conv = new TCanvas("c4_conv", "Segnale 4", 1500, 1200);
-    h_q4->SetTitle("Trigger S3, Segnale 4;QDC;#frac{dN}{d QDC}");
+    h_q4->SetTitle("QDC Trigger S3, Segnale 4;QDC;#frac{dN}{d QDC}");
     h_q4->Draw("E");
     h_q4->Draw("HIST SAME");
     landau_q4->Draw("same");
@@ -210,13 +210,10 @@ void fitQDC_3_conv() {
         sigma_res4.push_back(sigma_res_value4);
     }
     
-
-    TCanvas *c_residui = new TCanvas("c_residui", "QDC Trigger S3, Grafico dei Residui", 1200, 800);
-    c_residui->Divide(2, 2);
-
     // Residui per q1
-    c_residui->cd(1);
-    c_residui->cd(1)->SetGrid();
+    TCanvas *c_residui1 = new TCanvas("c_residui1", "QDC Trigger S2-4, Grafico dei Residui segnale 1", 1200, 800);
+    c_residui1->cd();
+    c_residui1->SetGrid();
     TGraphErrors *residui_q1 = new TGraphErrors(h_q1->GetNbinsX());
     for (int i = 0; i < h_q1->GetNbinsX(); i++) {
         double fit_value = landau_q1->Eval(h_q1->GetBinCenter(i));
@@ -227,7 +224,7 @@ void fitQDC_3_conv() {
     
     TF1 *horiz1 = new TF1("horiz_q1", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     horiz1->SetLineColor(kBlue);
-    residui_q1->SetTitle("Segnale 1;QDC;Residui");
+    residui_q1->SetTitle("Residui;QDC;Residui");
     residui_q1->SetMarkerStyle(1);
     residui_q1->SetMarkerSize(.1);
     residui_q1->SetMarkerColor(kRed);
@@ -236,23 +233,11 @@ void fitQDC_3_conv() {
     residui_q1->Draw("AP");
     residui_q1->Fit("horiz_q1");
     horiz1->Draw("same");
-    
-    TPaveText *eqretta1 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
-    eqretta1->SetBorderSize(1);
-    eqretta1->SetFillColor(kWhite);
-    eqretta1->SetTextAlign(20);
-    eqretta1->SetTextSize(0.03);
-    double mr_q1 = horiz1->GetParameter(1);
-    double mr_q1_err = horiz1->GetParError(1);
-    double qr_q1 = horiz1->GetParameter(0);
-    double qr_q1_err = horiz1->GetParError(0);
-    eqretta1->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q1, mr_q1_err, qr_q1, qr_q1_err));
-    eqretta1->Draw("same");
-
 
 // Residui per q2
-    c_residui->cd(2);
-    c_residui->cd(2)->SetGrid();
+    TCanvas *c_residui2 = new TCanvas("c_residui2", "QDC Trigger S2-4, Grafico dei Residui segnale 2", 1200, 800);
+    c_residui2->cd();
+    c_residui2->SetGrid();
     TGraphErrors *residui_q2 = new TGraphErrors(h_q2->GetNbinsX());
     for (int i = 0; i < h_q2->GetNbinsX(); i++) {
         double fit_value = landau_q2->Eval(h_q2->GetBinCenter(i));
@@ -263,7 +248,7 @@ void fitQDC_3_conv() {
     
     TF1 *horiz2 = new TF1("horiz_q2", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     horiz2->SetLineColor(kBlue);
-    residui_q2->SetTitle("Segnale 2;QDC;Residui");
+    residui_q2->SetTitle("Residui;QDC;Residui");
     residui_q2->SetMarkerStyle(1);
     residui_q2->SetMarkerSize(.1);
     residui_q2->SetMarkerColor(kGreen);
@@ -272,22 +257,11 @@ void fitQDC_3_conv() {
     residui_q2->Draw("AP");
     residui_q2->Fit("horiz_q2");
     horiz2->Draw("same");
-    
-    TPaveText *eqretta2 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
-    eqretta2->SetBorderSize(1);
-    eqretta2->SetFillColor(kWhite);
-    eqretta2->SetTextAlign(20);
-    eqretta2->SetTextSize(0.03);
-    double mr_q2 = horiz2->GetParameter(1);
-    double mr_q2_err = horiz2->GetParError(1);
-    double qr_q2 = horiz2->GetParameter(0);
-    double qr_q2_err = horiz2->GetParError(0);
-    eqretta2->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q2, mr_q2_err, qr_q2, qr_q2_err));
-    eqretta2->Draw("same");
 
     // Residui per q3
-    c_residui->cd(3);
-    c_residui->cd(3)->SetGrid();
+    TCanvas *c_residui3 = new TCanvas("c_residui3", "QDC Trigger S2-4, Grafico dei Residui segnale 3", 1200, 800);
+    c_residui3->cd();
+    c_residui3->SetGrid();
     TGraphErrors *residui_q3 = new TGraphErrors(h_q3->GetNbinsX());
     for (int i = 0; i < h_q3->GetNbinsX(); i++) {
         double fit_value = landau_q3->Eval(h_q3->GetBinCenter(i));
@@ -298,7 +272,7 @@ void fitQDC_3_conv() {
     
     TF1 *horiz3 = new TF1("horiz_q3", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     horiz3->SetLineColor(kBlue);
-    residui_q3->SetTitle("Segnale 3;QDC;Residui");
+    residui_q3->SetTitle("Residui;QDC;Residui");
     residui_q3->SetMarkerStyle(1);
     residui_q3->SetMarkerSize(.1);
     residui_q3->SetMarkerColor(kCyan);
@@ -307,22 +281,11 @@ void fitQDC_3_conv() {
     residui_q3->Draw("AP");
     residui_q3->Fit("horiz_q3");
     horiz3->Draw("same");
-    
-    TPaveText *eqretta3 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
-    eqretta3->SetBorderSize(1);
-    eqretta3->SetFillColor(kWhite);
-    eqretta3->SetTextAlign(20);
-    eqretta3->SetTextSize(0.03);
-    double mr_q3 = horiz3->GetParameter(1);
-    double mr_q3_err = horiz3->GetParError(1);
-    double qr_q3 = horiz3->GetParameter(0);
-    double qr_q3_err = horiz3->GetParError(0);
-    eqretta3->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q3, mr_q3_err, qr_q3, qr_q3_err));
-    eqretta3->Draw("same");
 
     // Residui per q4
-    c_residui->cd(4);
-    c_residui->cd(4)->SetGrid();
+    TCanvas *c_residui4 = new TCanvas("c_residui4", "QDC Trigger S2-4, Grafico dei Residui segnale 4", 1200, 800);
+    c_residui4->cd();
+    c_residui4->SetGrid();
     TGraphErrors *residui_q4 = new TGraphErrors(h_q4->GetNbinsX());
     for (int i = 0; i < h_q4->GetNbinsX(); i++) {
         double fit_value = landau_q4->Eval(h_q4->GetBinCenter(i));
@@ -333,7 +296,7 @@ void fitQDC_3_conv() {
     
     TF1 *horiz4 = new TF1("horiz_q4", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     horiz4->SetLineColor(kBlue);
-    residui_q4->SetTitle("Segnale 4;QDC;Residui");
+    residui_q4->SetTitle("Residui;QDC;Residui");
     residui_q4->SetMarkerStyle(1);
     residui_q4->SetMarkerSize(.1);
     residui_q4->SetMarkerColor(kViolet);
@@ -342,29 +305,14 @@ void fitQDC_3_conv() {
     residui_q4->Draw("AP");
     residui_q4->Fit("horiz_q4");
     horiz4->Draw("same");
-    
-    TPaveText *eqretta4 = new TPaveText(0.5, 0.1, 0.9, 0.2, "NDC");
-    eqretta4->SetBorderSize(1);
-    eqretta4->SetFillColor(kWhite);
-    eqretta4->SetTextAlign(20);
-    eqretta4->SetTextSize(0.03);
-    double mr_q4 = horiz4->GetParameter(1);
-    double mr_q4_err = horiz4->GetParError(1);
-    double qr_q4 = horiz4->GetParameter(0);
-    double qr_q4_err = horiz4->GetParError(0);
-    eqretta4->AddText(Form("m = %.3f +/- %.3f, q = %.3f +/- %.3f", mr_q4, mr_q4_err, qr_q4, qr_q4_err));
-    eqretta4->Draw("same");
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ### Istogrammi dei residui ###
-TCanvas *c_histores = new TCanvas("c_histores", "Istogramma dei pull QDC", 1800, 1600);
-c_histores->SetTitle("QDC Trigger S3, Istogramma dei Pull");
-c_histores->Divide(2, 2);
-
+    
 // Istogramma dei residui per il primo fit (q1)
-c_histores->cd(1);
+TCanvas *c_histores1 = new TCanvas("c_histores1", "Istogramma dei pull QDC segnale 1", 1800, 1600);
+c_histores1->cd();
 TH1F* h1 = new TH1F("Istogramma pull Segnale 1", "Istogramma pull Segnale 1", 31, -15.0, 15.0);
 for (int i = 1; i <= h_q1->GetNbinsX(); ++i) {
     float resid = (h_q1->GetBinContent(i) - landau_q1->Eval(h_q1->GetBinCenter(i))) / TMath::Sqrt(h_q1->GetBinContent(i));
@@ -372,7 +320,7 @@ for (int i = 1; i <= h_q1->GetNbinsX(); ++i) {
 }
 h1->SetFillColorAlpha(kRed, 1.0);
 h1->SetFillStyle(3002);
-h1->SetTitle("Segnale 1");
+h1->SetTitle("Istogramma dei pull");
 TF1* gauss1 = new TF1("gauss1", "gaus", -10.0, 10.0);
 gauss1->SetParameters(3.0, 0.0, 1.0);
 h1->Fit(gauss1);
@@ -381,7 +329,8 @@ h1->Draw("bar same");
 gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il terzo fit (q2)
-c_histores->cd(2);
+TCanvas *c_histores2 = new TCanvas("c_histores2", "Istogramma dei pull QDC segnale 2", 1800, 1600);
+c_histores2->cd();
 TH1F* h3 = new TH1F("Istogramma pull Segnale 2", "Istogramma pull Segnale 2", 31, -15.0, 15.0);
 for (int i = 1; i <= h_q2->GetNbinsX(); ++i) {
     float resid = (h_q2->GetBinContent(i) - landau_q2->Eval(h_q2->GetBinCenter(i))) / TMath::Sqrt(h_q2->GetBinContent(i));
@@ -389,7 +338,7 @@ for (int i = 1; i <= h_q2->GetNbinsX(); ++i) {
 }
 h3->SetFillColorAlpha(kRed, 1.0);
 h3->SetFillStyle(3002);
-h3->SetTitle("Segnale 2");
+h3->SetTitle("Istogramma dei pull");
 TF1* gauss3 = new TF1("gauss3", "gaus", -10.0, 10.0);
 gauss3->SetParameters(3.0, 0.0, 1.0);
 h3->Fit(gauss3);
@@ -398,7 +347,8 @@ h3->Draw("bar same");
 gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il quinto fit (q3)
-c_histores->cd(3);
+TCanvas *c_histores3 = new TCanvas("c_histores3", "Istogramma dei pull QDC segnale 3", 1800, 1600);
+c_histores3->cd();
 TH1F* h5 = new TH1F("Istogramma pull Segnale 3","Istogramma pull Segnale 3", 31, -15.0, 15.0);
 for (int i = 1; i <= h_q3->GetNbinsX(); ++i) {
     float resid = (h_q3->GetBinContent(i) - landau_q3->Eval(h_q3->GetBinCenter(i))) / TMath::Sqrt(h_q3->GetBinContent(i));
@@ -406,7 +356,7 @@ for (int i = 1; i <= h_q3->GetNbinsX(); ++i) {
 }
 h5->SetFillColorAlpha(kRed, 1.0);
 h5->SetFillStyle(3002);
-h5->SetTitle("Segnale 3");
+h5->SetTitle("Istogramma dei pull");
 TF1* gauss5 = new TF1("gauss5", "gaus", -10.0, 10.0);
 gauss5->SetParameters(3.0, 0.0, 1.0);
 h5->Fit(gauss5);
@@ -415,7 +365,8 @@ h5->Draw("bar same");
 gStyle->SetOptFit(111);
 
 // Istogramma dei residui per il settimo fit (q4)
-c_histores->cd(4);
+TCanvas *c_histores4 = new TCanvas("c_histores4", "Istogramma dei pull QDC segnale 4", 1800, 1600);
+c_histores4->cd();
 TH1F* h7 = new TH1F("Istogramma pull Segnale 4","Istogramma pull Segnale 4", 31, -15.0, 15.0);
 for (int i = 1; i <= h_q4->GetNbinsX(); ++i) {
     float resid = (h_q4->GetBinContent(i) - landau_q4->Eval(h_q4->GetBinCenter(i))) / TMath::Sqrt(h_q4->GetBinContent(i));
@@ -423,7 +374,7 @@ for (int i = 1; i <= h_q4->GetNbinsX(); ++i) {
 }
 h7->SetFillColorAlpha(kRed, 1.0);
 h7->SetFillStyle(3002);
-h7->SetTitle("Segnale 4");
+h7->SetTitle("Istogramma dei pull");
 TF1* gauss7 = new TF1("gauss7", "gaus", -10.0, 10.0);
 gauss7->SetParameters(3.0, 0.0, 1.0);
 h7->Fit(gauss7);
@@ -432,7 +383,10 @@ h7->Draw("bar same");
 gStyle->SetOptFit(111);
 
 // Salva la canvas come file pdf
-c_histores->Update();
+c_histores1->Update();
+c_histores2->Update();
+c_histores3->Update();
+c_histores4->Update();
 
     return;
 }
