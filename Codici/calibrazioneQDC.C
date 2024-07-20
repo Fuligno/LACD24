@@ -310,8 +310,8 @@ void calibrazioneQDC() {
     linear_q1_low->SetLineWidth(1);
     gr_q1_low->Fit(linear_q1_low, "Q");
     //gr_q1_low->SetStats(false);
-    gStyle->SetOptFit(false);
-    gStyle->SetOptStat(false);
+    //gStyle->SetOptFit(false);
+    //gStyle->SetOptStat(false);
     gr_q1_low->Draw("AP");
     linear_q1_low->Draw("same");
 
@@ -562,12 +562,10 @@ void calibrazioneQDC() {
     }
 
     // Crea una canvas per i residui low
-    TCanvas *c_residuals_low = new TCanvas("c_residuals_low", "Residuals for Low Resolution", 1200, 800);
-    c_residuals_low->Divide(2, 2); // Divide in 4 sottoplot (2x2)
+    TCanvas *c_residuals_low = new TCanvas("c_residuals_low", "", 1200, 800);
+    c_residuals_low->cd();
 
     // Primo sottoplot: Residui per mean_q1_low
-    c_residuals_low->cd(1);
-    c_residuals_low->cd(1)->SetGrid();
     TGraphErrors *gr_residuals_q1_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double expected_q1_low = linear_q1_low->Eval(x1[i]);
@@ -579,7 +577,7 @@ void calibrazioneQDC() {
     TF1 *horiz_q1_low = new TF1("horiz_q1_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q1_low->SetMarkerStyle(20);
     gr_residuals_q1_low->SetMarkerColor(kPink+10);
-    gr_residuals_q1_low->SetTitle("Residui q1 (Low Resolution);Carica [nC];Residui");
+    gr_residuals_q1_low->SetTitle("Residui canale 0 (bassa risoluzione);Carica [nC];Residui");
     gr_residuals_q1_low->Draw("AP");
     gr_residuals_q1_low->Fit("horiz_q1_low");
     horiz_q1_low->Draw("same");
@@ -597,9 +595,11 @@ void calibrazioneQDC() {
     eqretta_q1_low->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q1_low, mr_q1_low_err, qr_q1_low, qr_q1_low_err));
     eqretta_q1_low->Draw("same");
 
+    c_residuals_low->Update();
+
     // Secondo sottoplot: Residui per mean_q2_low
-    c_residuals_low->cd(2); // Seleziona il secondo sottoplot
-    c_residuals_low->cd(2)->SetGrid();
+    TCanvas *c_residuals_low1 = new TCanvas("c_residuals_low1", "", 1200, 800);
+    c_residuals_low1->cd();
     TGraphErrors *gr_residuals_q2_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double expected_q2_low = linear_q2_low->Eval(x2[i]);
@@ -611,7 +611,7 @@ void calibrazioneQDC() {
     TF1 *horiz_q2_low = new TF1("horiz_q2_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q2_low->SetMarkerStyle(20);
     gr_residuals_q2_low->SetMarkerColor(kAzure+1);
-    gr_residuals_q2_low->SetTitle("Residui q2 (Low Resolution);Carica [nC];Residui");
+    gr_residuals_q2_low->SetTitle("Residui canale 1 (bassa risoluzione);Carica [nC];Residui");
     gr_residuals_q2_low->Draw("AP");
     gr_residuals_q2_low->Fit("horiz_q2_low");
     horiz_q2_low->Draw("same");
@@ -630,8 +630,8 @@ void calibrazioneQDC() {
     eqretta_q2_low->Draw("same");
     
     // Terzo sottoplot: Residui per mean_q3_low
-    c_residuals_low->cd(3); // Seleziona il terzo sottoplot
-    c_residuals_low->cd(3)->SetGrid();
+    TCanvas *c_residuals_low2 = new TCanvas("c_residuals_low2", "", 1200, 800);
+    c_residuals_low2->cd();
     TGraphErrors *gr_residuals_q3_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double expected_q3_low = linear_q3_low->Eval(x3[i]);
@@ -643,7 +643,7 @@ void calibrazioneQDC() {
     TF1 *horiz_q3_low = new TF1("horiz_q3_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q3_low->SetMarkerStyle(20);
     gr_residuals_q3_low->SetMarkerColor(kTeal);
-    gr_residuals_q3_low->SetTitle("Residui q3 (Low Resolution);Carica [nC];Residui");
+    gr_residuals_q3_low->SetTitle("Residui canale 2 (bassa risoluzione);Carica [nC];Residui");
     gr_residuals_q3_low->Draw("AP");
     gr_residuals_q3_low->Fit("horiz_q3_low");
     horiz_q3_low->Draw("same");
@@ -662,8 +662,8 @@ void calibrazioneQDC() {
     eqretta_q3_low->Draw("same");
 
     // Quarto sottoplot: Residui per mean_q4_low
-    c_residuals_low->cd(4); // Seleziona il quarto sottoplot
-    c_residuals_low->cd(4)->SetGrid();
+    TCanvas *c_residuals_low3 = new TCanvas("c_residuals_low3", "", 1200, 800);
+    c_residuals_low3->cd();
     TGraphErrors *gr_residuals_q4_low = new TGraphErrors(x_values.size());
     for (int i = 0; i < x_values.size(); i++) {
         double expected_q4_low = linear_q4_low->Eval(x4[i]);
@@ -675,7 +675,7 @@ void calibrazioneQDC() {
     TF1 *horiz_q4_low = new TF1("horiz_q4_low", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q4_low->SetMarkerStyle(20);
     gr_residuals_q4_low->SetMarkerColor(kOrange-3);
-    gr_residuals_q4_low->SetTitle("Residui q4 (Low Resolution);Carica [nC];Residui");
+    gr_residuals_q4_low->SetTitle("Residui canale 3 (bassa risoluzione);Carica [nC];Residui");
     gr_residuals_q4_low->Draw("AP");
     gr_residuals_q4_low->Fit("horiz_q4_low");
     horiz_q4_low->Draw("same");
@@ -718,12 +718,10 @@ void calibrazioneQDC() {
 
 
     // Crea una canvas per i residui high
-    TCanvas *c_residuals_high = new TCanvas("c_residuals_high", "Residuals for High Resolution", 1200, 800);
-    c_residuals_high->Divide(2, 2); // Divide in 4 sottoplot (2x2)
-    
+    TCanvas *c_residuals_high = new TCanvas("c_residuals_high", "", 1200, 800);
+    c_residuals_high->cd();
+
     // Primo sottoplot: Residui per mean_q1_high
-    c_residuals_high->cd(1); // Seleziona il primo sottoplot
-    c_residuals_high->cd(1)->SetGrid();
     TGraphErrors *gr_residuals_q1_high = new TGraphErrors(x1_high.size());
     int j = 0;
     for (int i = 0; i < x_values.size(); i++) {
@@ -740,7 +738,7 @@ void calibrazioneQDC() {
     TF1 *horiz_q1_high = new TF1("horiz_q1_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q1_high->SetMarkerStyle(20);
     gr_residuals_q1_high->SetMarkerColor(kPink+10);
-    gr_residuals_q1_high->SetTitle("Residui q1 (High Resolution);Carica [nC];Residui");
+    gr_residuals_q1_high->SetTitle("Residui canale 0 (alta risoluzione);Carica [nC];Residui");
     gr_residuals_q1_high->Draw("AP");
     gr_residuals_q1_high->Fit("horiz_q1_high");
     horiz_q1_high->Draw("same");
@@ -758,9 +756,12 @@ void calibrazioneQDC() {
     eqretta_q1_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q1_high, mr_q1_high_err, qr_q1_high, qr_q1_high_err));
     eqretta_q1_high->Draw("same");
 
+    c_residuals_high->Update();
+
+
     // Secondo sottoplot: Residui per mean_q2_high
-    c_residuals_high->cd(2); // Seleziona il secondo sottoplot
-    c_residuals_high->cd(2)->SetGrid();
+    TCanvas *c_residuals_high1 = new TCanvas("c_residuals_high1", "Residuals for High Resolution", 1200, 800);
+    c_residuals_high1->cd();
     TGraphErrors *gr_residuals_q2_high = new TGraphErrors(x2_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
@@ -777,7 +778,7 @@ void calibrazioneQDC() {
 TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q2_high->SetMarkerStyle(20);
     gr_residuals_q2_high->SetMarkerColor(kAzure+1);
-    gr_residuals_q2_high->SetTitle("Residui q2 (High Resolution);Carica [nC];Residui");
+    gr_residuals_q2_high->SetTitle("Residui canale 1 (alta risoluzione);Carica [nC];Residui");
     gr_residuals_q2_high->Draw("AP");
     gr_residuals_q2_high->Fit("horiz_q2_high");
     horiz_q2_high->Draw("same");
@@ -795,9 +796,11 @@ TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a rett
     eqretta_q2_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q2_high, mr_q2_high_err, qr_q2_high, qr_q2_high_err));
     eqretta_q2_high->Draw("same");
 
+    c_residuals_high1->Update();
+
     // Terzo sottoplot: Residui per mean_q3_high
-    c_residuals_high->cd(3); // Seleziona il terzo sottoplot
-    c_residuals_high->cd(3)->SetGrid();
+    TCanvas *c_residuals_high2 = new TCanvas("c_residuals_high2", "Residuals for High Resolution", 1200, 800);
+    c_residuals_high2->cd();
     TGraphErrors *gr_residuals_q3_high = new TGraphErrors(x3_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
@@ -814,7 +817,7 @@ TF1 *horiz_q2_high = new TF1("horiz_q2_high", "pol1", 0.0, 100.0);	// fit a rett
 TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q3_high->SetMarkerStyle(20);
     gr_residuals_q3_high->SetMarkerColor(kTeal);
-    gr_residuals_q3_high->SetTitle("Residui q3 (High Resolution);Carica [nC];Residui");
+    gr_residuals_q3_high->SetTitle("Residui canale 2 (alta risoluzione);Carica [nC];Residui");
     gr_residuals_q3_high->Draw("AP");
     gr_residuals_q3_high->Fit("horiz_q3_high");
     horiz_q3_high->Draw("same");
@@ -832,9 +835,11 @@ TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a rett
     eqretta_q3_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q3_high, mr_q3_high_err, qr_q3_high, qr_q3_high_err));
     eqretta_q3_high->Draw("same");
 
+    c_residuals_high2->Update();
+
     // Quarto sottoplot: Residui per mean_q4_high
-    c_residuals_high->cd(4); // Seleziona il quarto sottoplot
-    c_residuals_high->cd(4)->SetGrid();
+    TCanvas *c_residuals_high3 = new TCanvas("c_residuals_high3", "Residuals for High Resolution", 1200, 800);
+    c_residuals_high3->cd();
     TGraphErrors *gr_residuals_q4_high = new TGraphErrors(x4_high.size());
     j = 0;
     for (int i = 0; i < x_values.size(); i++) {
@@ -851,7 +856,7 @@ TF1 *horiz_q3_high = new TF1("horiz_q3_high", "pol1", 0.0, 100.0);	// fit a rett
 TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a retta dei residui (linea il più possibile orizzontale)
     gr_residuals_q4_high->SetMarkerStyle(20);
     gr_residuals_q4_high->SetMarkerColor(kOrange-3);
-    gr_residuals_q4_high->SetTitle("Residui q4 (High Resolution);Carica [nC];Residui");
+    gr_residuals_q4_high->SetTitle("Residui canale 3 (alta risoluzione);Carica [nC];Residui");
     gr_residuals_q4_high->Draw("AP");
     gr_residuals_q4_high->Fit("horiz_q4_high");
     horiz_q4_high->Draw("same");
@@ -869,23 +874,25 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     eqretta_q4_high->AddText(Form("m = %.3f #pm %.3f, q = %.3f #pm %.3f", mr_q4_high, mr_q4_high_err, qr_q4_high, qr_q4_high_err));
     eqretta_q4_high->Draw("same");
 
+    c_residuals_high3->Update();
+
     // Salva la canvas come file PNG
     c_residuals_high->Update();
     c_residuals_high->SaveAs("../Dati/QDC/residuals_calibrazioneQDC_high.png");
 
     // ### Istogrammi dei RESIDUI LOW ###
-    TCanvas *c_histores = new TCanvas("c_histores", "Istogramma residui QDC_low", 1200, 800);
-    c_histores->Divide(2, 2);
-    
+    TCanvas *c_histores = new TCanvas("c_histores", "Istogramma residui QDC_high", 1200, 800);
+    c_histores->cd();
+
     // Istogramma dei residui per q1_low
-    c_histores->cd(1);
-    TH1F* h1 = new TH1F("h1", "Istogramma residui q1_low", 20, -20.0, 20.0);
+    TH1F* h1 = new TH1F("Canale 0 (bassa risoluzione)", "", 20, -20.0, 20.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca1 = (means_q1_low[i]-linear_q1_low->Eval(x1[i]))/sigma_res1_low[i];
 	    h1->Fill(resid_della_ricca1);
     }
     h1->SetFillColorAlpha(kRed, 1.0);	// colore di riempimento dell'istogramma
     h1->SetFillStyle(3002);	// pattern di riempimento
+    h1->SetTitle("Istogramma dei pull; conteggi; pull");
 
     //TCanvas* c2 = new TCanvas("c2", "Istogramma dei residui QDC", 600, 0, 500, 500);
     TF1* gauss1 = new TF1("gauss1", "gaus", -2.0, 2.0);
@@ -894,55 +901,65 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     h1->Draw("E1");	// disegno le barre di errore
     h1->Draw("bar same");
     //gStyle->SetOptStat(0);
-    gStyle->SetOptFit(1111);	// visualizzo le statistiche
+    gStyle->SetOptFit(111);	// visualizzo le statistiche
+    c_histores->Update();
     
     // Istogramma dei residui per q2_low
-    c_histores->cd(2);
-    TH1F* h2 = new TH1F("h2", "Istogramma residui q2_low", 20, -20.0, 20.0);
+    TCanvas *c_histores2 = new TCanvas("c_histores2", "Istogramma residui QDC_high", 1200, 800);
+    c_histores2->cd();
+    TH1F* h2 = new TH1F("Canale 1 (bassa risoluzione)", "", 20, -20.0, 20.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca2 = (means_q2_low[i]-linear_q2_low->Eval(x2[i]))/sigma_res2_low[i];
 	    h2->Fill(resid_della_ricca2);
     }
     h2->SetFillColorAlpha(kRed, 1.0);
     h2->SetFillStyle(3002);
+    h2->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss2 = new TF1("gauss2", "gaus", -2.0, 2.0);
     gauss2->SetParameters(3.0, 0.0, 1.0);
     h2->Fit(gauss2);
     h2->Draw("E1");
     h2->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
+    c_histores2->Update();
     
     // Istogramma dei residui per q3_low
-    c_histores->cd(3);
-    TH1F* h3 = new TH1F("h3", "Istogramma residui q3_low", 20, -30.0, 30.0);
+    TCanvas *c_histores3 = new TCanvas("c_histores3", "Istogramma residui QDC_high", 1200, 800);
+    c_histores3->cd();
+    TH1F* h3 = new TH1F("Canale 2 (bassa risoluzione)", "", 20, -30.0, 30.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca3 = (means_q3_low[i]-linear_q3_low->Eval(x3[i]))/sigma_res3_low[i];
 	    h3->Fill(resid_della_ricca3);
     }
     h3->SetFillColorAlpha(kRed, 1.0);
     h3->SetFillStyle(3002);
+    h3->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss3 = new TF1("gauss3", "gaus", -2.0, 2.0);
     gauss3->SetParameters(3.0, 0.0, 1.0);
     h3->Fit(gauss3);
     h3->Draw("E1");
     h3->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
+    c_histores3->Update();
     
     // Istogramma dei residui per q4_low
-    c_histores->cd(4);
-    TH1F* h4 = new TH1F("h4", "Istogramma residui q4_low", 20, -20.0, 20.0);
+    TCanvas *c_histores4 = new TCanvas("c_histores4", "Istogramma residui QDC_high", 1200, 800);
+    c_histores4->cd();
+    TH1F* h4 = new TH1F("Canale 3 (bassa risoluzione)", "", 20, -20.0, 20.0);
     for (int i=0; i < x_values.size(); i++) {
 	    float resid_della_ricca4 = (means_q4_low[i]-linear_q4_low->Eval(x4[i]))/sigma_res4_low[i];
 	    h4->Fill(resid_della_ricca4);
     }
     h4->SetFillColorAlpha(kRed, 1.0);
     h4->SetFillStyle(3002);
+    h4->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss4 = new TF1("gauss4", "gaus", -2.0, 2.0);
     gauss4->SetParameters(3.0, 0.0, 1.0);
     h4->Fit(gauss4);
     h4->Draw("E1");
     h4->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
+    c_histores4->Update();
     
     // Salva la canvas come file PNG
     c_histores->Update();
@@ -950,17 +967,16 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
 
     // ### Istogrammi dei RESIDUI HIGH ###
     TCanvas *c_historesh = new TCanvas("c_historesh", "Istogramma residui QDC_high", 1200, 800);
-    c_historesh->Divide(2, 2);
-    
+    c_historesh->cd();
     // Istogramma dei residui per q1_high
-    c_historesh->cd(1);
-    TH1F* h1h = new TH1F("h1h", "Istogramma residui q1_high", 22, -200.0, 200.0);
+    TH1F* h1h = new TH1F("Canale 0 (alta risoluzione)", "", 22, -200.0, 200.0);
     for (int i=0; i < x1_high.size(); i++) {
 	    float resid_della_ricca1 = (means_q1_high[i]-linear_q1_high->Eval(x1_high[i]))/sigma_res1_high[i];
 	    h1h->Fill(resid_della_ricca1);
     }
     h1h->SetFillColorAlpha(kRed, 1.0);	// colore di riempimento dell'istogramma
     h1h->SetFillStyle(3002);	// pattern di riempimento
+    h1h->SetTitle("Istogramma dei pull; conteggi; pull");
     //TCanvas* c2 = new TCanvas("c2", "Istogramma dei residui QDC", 600, 0, 500, 500);
     TF1* gauss1h = new TF1("gauss1h", "gaus", -2.0, 2.0);
     gauss1h->SetParameters(3.0, 0.0, 1.0);
@@ -968,59 +984,67 @@ TF1 *horiz_q4_high = new TF1("horiz_q4_high", "pol1", 0.0, 100.0);	// fit a rett
     h1h->Draw("E1");	// disegno le barre di errore
     h1h->Draw("bar same");
     //gStyle->SetOptStat(0);
-    gStyle->SetOptFit(1111);	// visualizzo le statistiche
+    gStyle->SetOptFit(111);	// visualizzo le statistiche
+    c_historesh->Update();
     
     // Istogramma dei residui per q2_high
-    c_historesh->cd(2);
-    TH1F* h2h = new TH1F("h2h", "Istogramma residui q2_low", 22, -200.0, 200.0);
+    TCanvas *c_historesh2 = new TCanvas("c_historesh2", "Istogramma residui QDC_high", 1200, 800);
+    c_historesh2->cd();
+    TH1F* h2h = new TH1F("Canale 1 (alta risoluzione)", "", 22, -200.0, 200.0);
     for (int i=0; i < x2_high.size(); i++) {
 	    float resid_della_ricca2 = (means_q2_high[i]-linear_q2_high->Eval(x2_high[i]))/sigma_res2_high[i];
 	    h2h->Fill(resid_della_ricca2);
     }
     h2h->SetFillColorAlpha(kRed, 1.0);
     h2h->SetFillStyle(3002);
+    h2h->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss2h = new TF1("gauss2h", "gaus", -2.0, 2.0);
     gauss2h->SetParameters(3.0, 0.0, 1.0);
     h2h->Fit(gauss2h);
     h2h->Draw("E1");
     h2h->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
+    c_historesh2->Update();
     
     // Istogramma dei residui per q3_high
-    c_historesh->cd(3);
-    TH1F* h3h = new TH1F("h3h", "Istogramma residui q3_high", 20, -200.0, 200.0);
+    TCanvas *c_historesh3 = new TCanvas("c_historesh3", "Istogramma residui QDC_high", 1200, 800);
+    c_historesh3->cd();
+    TH1F* h3h = new TH1F("Canale 2 (alta risoluzione)", "", 20, -200.0, 200.0);
     for (int i=0; i < x3_high.size(); i++) {
 	    float resid_della_ricca3 = (means_q3_high[i]-linear_q3_high->Eval(x3_high[i]))/sigma_res3_high[i];
 	    h3h->Fill(resid_della_ricca3);
     }
     h3h->SetFillColorAlpha(kRed, 1.0);
     h3h->SetFillStyle(3002);
+    h3h->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss3h = new TF1("gauss3h", "gaus", -2.0, 2.0);
     gauss3h->SetParameters(3.0, 0.0, 1.0);
     h3h->Fit(gauss3h);
     h3h->Draw("E1");
     h3h->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
+    c_historesh3->Update();
     
     // Istogramma dei residui per q4_high
-    c_historesh->cd(4);
-    TH1F* h4h = new TH1F("h4h", "Istogramma residui q4_high", 22, -200.0, 200.0);
+    TCanvas *c_historesh4 = new TCanvas("c_historesh4", "Istogramma residui QDC_high", 1200, 800);
+    c_historesh4->cd();
+    TH1F* h4h = new TH1F("Canale 3 (alta risoluzione)", "", 22, -200.0, 200.0);
     for (int i=0; i < x4_high.size(); i++) {
 	    float resid_della_ricca4 = (means_q4_high[i]-linear_q4_high->Eval(x4_high[i]))/sigma_res4_high[i];
 	    h4h->Fill(resid_della_ricca4);
     }
     h4h->SetFillColorAlpha(kRed, 1.0);
     h4h->SetFillStyle(3002);
+    h4h->SetTitle("Istogramma dei pull; conteggi; pull");
     TF1* gauss4h = new TF1("gauss4h", "gaus", -2.0, 2.0);
     gauss4h->SetParameters(3.0, 0.0, 1.0);
     h4h->Fit(gauss4h);
     h4h->Draw("E1");
     h4h->Draw("bar same");
-    gStyle->SetOptFit(1111);
+    gStyle->SetOptFit(111);
     
     // Salva la canvas come file PNG
-    c_historesh->Update();
-    c_historesh->SaveAs("../Dati/QDC/calibrazioneQDC_historesiduiHIGH.png");
+    c_historesh4->Update();
 
     return;
 }
