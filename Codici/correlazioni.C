@@ -43,9 +43,12 @@ void correlazioni(){
     TH2F *hqt2 = new TH2F("hqt2", "q2 vs t2", 580, 200, 6000, 100, 400, 1400);
     TH2F *hqt3 = new TH2F("hqt3", "q3 vs t3", 580, 200, 6000, 100, 400, 1400);
     TH2F *hqt4 = new TH2F("hqt4", "q4 vs t4", 580, 200, 6000, 100, 400, 1400);
-    TH2F *htLR = new TH2F("htLR", "t2 vs t4-t3", 100, 400, 1400, 100, -500, 500);
+    TH2F *hq1q2 = new TH2F("hq1q2", "q1 vs q2", 580, 200, 6000, 580, 200, 6000);
+    TH2F *hq3q4 = new TH2F("hq3q4", "q3 vs q4", 580, 200, 6000, 580, 200, 6000);
+    TH2F *ht2LR = new TH2F("ht2LR", "t2 vs t4-t3", 100, 400, 1400, 100, -500, 500);
+    TH2F *ht4LR = new TH2F("ht4LR", "t4 vs t4-t3", 100, 400, 1400, 100, -500, 500);
     TH2F *hqLR = new TH2F("hqLR", "q4 vs t4-t3", 580, 200, 6000, 100, -500, 500);
-
+    
     
 
     for (long i = 0; i < nEntries; ++i) {
@@ -54,7 +57,10 @@ void correlazioni(){
         hqt2->Fill(q2, t2);
         hqt3->Fill(q3, t3);
         hqt4->Fill(q4, t4);
-        htLR->Fill(t2, t4-t3);
+        hq1q2->Fill(q1, q2);
+        hq3q4->Fill(q3, q4);
+        ht2LR->Fill(t2, t4-t3);
+        ht4LR->Fill(t4, t4-t3);
         hqLR->Fill(q4, t4-t3);
 
     }
@@ -79,7 +85,20 @@ void correlazioni(){
 
     TCanvas *c5 = new TCanvas("c5", "Istogramma 2D", 800, 600);
     c5->cd();
-    htLR->Draw("colz");
+    ht2LR->Draw("colz");
+
+    TCanvas *c6 = new TCanvas("c6", "Istogramma 2D", 800, 600);
+    c6->cd();
+    ht4LR->Draw("colz");
+
+    TCanvas *c7 = new TCanvas("c7", "Istogramma 2D", 800, 600);
+    c7->cd();
+    hq1q2->Draw("colz");
+
+    TCanvas *c8 = new TCanvas("c8", "Istogramma 2D", 800, 600);
+    c8->cd();
+    hq3q4->Draw("colz");
+
 
     // Salva il canvas in un file immagine
     //canvas->SaveAs("histogram2D.png");
